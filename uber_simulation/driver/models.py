@@ -71,14 +71,14 @@ class Driver(AbstractUser):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='offline')
     introduction_video = models.FileField(upload_to='driver_videos/', null=True, blank=True)
     profile_photo = models.ImageField(upload_to='driver_photos/', null=True, blank=True)
-    reviews = models.ManyToManyField('Review', related_name='driver_reviews', blank=True)
-    
+    #reviews = models.ManyToManyField('Review', related_name='driver_reviews', blank=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
 
 class Review(models.Model):
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='reviews')
-    passenger = models.ForeignKey('passenger.Passenger', on_delete=models.CASCADE)
+    passenger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
