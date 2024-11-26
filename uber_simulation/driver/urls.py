@@ -10,6 +10,6 @@ router.register(r'drivers', DriverViewSet, basename='driver')
 urlpatterns = [
     path('login/', driver_login, name='driver-login'),  # Put login first
     path('profile/update/', update_profile, name='update_profile'),
-    path('drivers/<int:driver_id>/reviews/', add_review, name='add_review'),
+    path('<int:driver_id>/reviews/', add_review, name='add_review'),
     path('', include(router.urls)),
 ]
