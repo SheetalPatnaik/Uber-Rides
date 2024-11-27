@@ -5,6 +5,8 @@ from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.cache import cache
+from django.db import transaction
 from .models import Driver
 from .serializers import DriverSerializer, ReviewSerializer
 import googlemaps
@@ -21,10 +23,11 @@ def driver_login(request):
     
     if user:
         refresh = RefreshToken.for_user(user)
-        # Update driver's location
         user.update_current_location()
         
-        return Response({
+        # Cache user data
+        cache_key = f'driver_auth_{user.id}'
+        user_data = {
             'access_token': str(refresh.access_token),
             'refresh_token': str(refresh),
             'user_id': user.id,
@@ -32,8 +35,14 @@ def driver_login(request):
             'name': f"{user.first_name} {user.last_name}",
             'current_location_lat': user.current_location_lat,
             'current_location_lng': user.current_location_lng
-        })
-    return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        }
+        cache.set(cache_key, user_data, timeout=3600)
+        
+        return Response(user_data)
+    return Response(
+        {'error': 'Invalid credentials'}, 
+        status=status.HTTP_401_UNAUTHORIZED
+    )
 
 class DriverFilter(filters.FilterSet):
     class Meta:
@@ -55,55 +64,93 @@ class DriverViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = DriverFilter
 
+    def get_object(self):
+        pk = self.kwargs.get('pk')
+        cache_key = Driver.DRIVER_CACHE_KEY.format(pk)
+        
+        # Try to get from cache
+        driver = cache.get(cache_key)
+        if not driver:
+            driver = super().get_object()
+            cache.set(cache_key, driver, timeout=3600)
+        
+        return driver
+
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
+        # Check for duplicate driver
+        email = request.data.get('email')
+        phone = request.data.get('phone_number')
+        
+        if Driver.objects.filter(email=email).exists():
+            return Response(
+                {'error': 'Driver with this email already exists'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        if Driver.objects.filter(phone_number=phone).exists():
+            return Response(
+                {'error': 'Driver with this phone number already exists'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
+        return Response(
+            serializer.data, 
+            status=status.HTTP_201_CREATED, 
+            headers=headers
+        )
+    
     @action(detail=True, methods=['post'])
     def update_location(self, request, pk=None):
         driver = self.get_object()
-        latitude = request.data.get('latitude')
-        longitude = request.data.get('longitude')
         
-        if latitude and longitude:
-            driver.current_location_lat = latitude
-            driver.current_location_lng = longitude
-            driver.save()
+        if driver.update_current_location():
+            # Clear cache for this driver
+            cache_key = Driver.DRIVER_CACHE_KEY.format(driver.id)
+            cache.delete(cache_key)
             return Response({'status': 'location updated'})
-        return Response({'error': 'latitude and longitude required'}, 
-                      status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['post'])
-    def update_status(self, request, pk=None):
-        driver = self.get_object()
-        new_status = request.data.get('status')
-        
-        if new_status in dict(Driver.STATUS_CHOICES):
-            driver.status = new_status
-            driver.save()
-            return Response({'status': 'driver status updated'})
-        return Response({'error': 'invalid status'}, 
-                      status=status.HTTP_400_BAD_REQUEST)
+            
+        return Response(
+            {'error': 'Failed to update location'}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     @action(detail=False, methods=['get'])
     def available_drivers(self, request):
-        available = Driver.objects.filter(
-            status='available',
-            is_active=True
-        )
-        serializer = self.get_serializer(available, many=True)
-        return Response(serializer.data)
+        cache_key = Driver.AVAILABLE_DRIVERS_CACHE_KEY
+        result = cache.get(cache_key)
+        
+        if not result:
+            available = Driver.objects.filter(
+                status='available',
+                is_active=True
+            )
+            serializer = self.get_serializer(available, many=True)
+            result = serializer.data
+            cache.set(cache_key, result, timeout=300)  # Cache for 5 minutes
+            
+        return Response(result)
 
     @action(detail=False, methods=['get'])
     def top_rated(self, request):
-        top_drivers = Driver.objects.filter(
-            is_active=True
-        ).order_by('-rating')[:10]
-        serializer = self.get_serializer(top_drivers, many=True)
-        return Response(serializer.data)
+        cache_key = Driver.TOP_RATED_DRIVERS_CACHE_KEY
+        result = cache.get(cache_key)
+        
+        if not result:
+            top_drivers = Driver.objects.filter(
+                is_active=True
+            ).order_by('-rating')[:10]
+            serializer = self.get_serializer(top_drivers, many=True)
+            result = serializer.data
+            cache.set(cache_key, result, timeout=3600)  # Cache for 1 hour
+            
+        return Response(result)
+    
+    
 
     def perform_create(self, serializer):
         serializer.save()

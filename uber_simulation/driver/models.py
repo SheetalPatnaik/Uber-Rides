@@ -1,12 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.contrib.auth.hashers import make_password
-from django.core.validators import RegexValidator
 from django.conf import settings
+from django.core.cache import cache
 import googlemaps
+from utils.validators import DataValidators
 
 class Driver(AbstractUser):
-    # Add related_names to resolve the conflicts
+    # Cache keys
+    DRIVER_CACHE_KEY = 'driver_{}'
+    AVAILABLE_DRIVERS_CACHE_KEY = 'available_drivers'
+    TOP_RATED_DRIVERS_CACHE_KEY = 'top_rated_drivers'
+
+    # Existing group and permission fields
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='driver_set',
@@ -22,7 +27,7 @@ class Driver(AbstractUser):
         help_text='Specific permissions for this user.',
     )
 
-    # Rest of your existing model code remains the same
+    # Your existing fields with enhanced validation
     VEHICLE_TYPES = (
         ('sedan', 'Sedan'),
         ('suv', 'SUV'),
@@ -35,6 +40,45 @@ class Driver(AbstractUser):
         ('busy', 'Busy'),
         ('offline', 'Offline'),
     )
+
+    username = None
+    email = models.EmailField(unique=True)
+    phone_number = models.CharField(
+        max_length=16,
+        validators=[DataValidators.validate_ssn],
+        unique=True
+    )
+    address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(
+        max_length=2, 
+        validators=[DataValidators.validate_state]
+    )
+    zipcode = models.CharField(
+        max_length=10, 
+        validators=[DataValidators.validate_zipcode]
+    )
+    vehicle_type = models.CharField(max_length=20, choices=VEHICLE_TYPES)
+    vehicle_model = models.CharField(max_length=50)
+    vehicle_plate = models.CharField(max_length=15, unique=True)
+    license_number = models.CharField(max_length=20, unique=True)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.00)
+    total_trips = models.IntegerField(default=0)
+    current_location_lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    current_location_lng = models.DecimalField(max_digits=9, decimal_places=6, null=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='offline')
+    introduction_video = models.FileField(upload_to='driver_videos/', null=True, blank=True)
+    profile_photo = models.ImageField(upload_to='driver_photos/', null=True, blank=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
+
+    def save(self, *args, **kwargs):
+        # Clear cache on save
+        cache.delete(self.DRIVER_CACHE_KEY.format(self.id))
+        cache.delete(self.AVAILABLE_DRIVERS_CACHE_KEY)
+        cache.delete(self.TOP_RATED_DRIVERS_CACHE_KEY)
+        super().save(*args, **kwargs)
 
     def update_current_location(self):
         """
@@ -52,35 +96,31 @@ class Driver(AbstractUser):
         except Exception as e:
             return False
 
-    username = None
-    email = models.EmailField(unique=True)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}')    
-    phone_number = models.CharField(validators=[phone_regex], max_length=17, unique=True)
-    address = models.CharField(max_length=255)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    zipcode = models.CharField(max_length=10)
-    vehicle_type = models.CharField(max_length=20, choices=VEHICLE_TYPES)
-    vehicle_model = models.CharField(max_length=50)
-    vehicle_plate = models.CharField(max_length=15, unique=True)
-    license_number = models.CharField(max_length=20, unique=True)
-    rating = models.DecimalField(max_digits=3, decimal_places=2, default=5.00)
-    total_trips = models.IntegerField(default=0)
-    current_location_lat = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    current_location_lng = models.DecimalField(max_digits=9, decimal_places=6, null=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='offline')
-    introduction_video = models.FileField(upload_to='driver_videos/', null=True, blank=True)
-    profile_photo = models.ImageField(upload_to='driver_photos/', null=True, blank=True)
-    #reviews = models.ManyToManyField('Review', related_name='driver_reviews', blank=True)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'phone_number']
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['email'], 
+                name='unique_driver_email'
+            ),
+            models.UniqueConstraint(
+                fields=['phone_number'], 
+                name='unique_driver_phone'
+            ),
+        ]
 
 class Review(models.Model):
+    REVIEW_CACHE_KEY = 'review_{}'
+    
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='reviews')
     passenger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Clear cache on save
+        cache.delete(self.REVIEW_CACHE_KEY.format(self.id))
+        cache.delete(Driver.DRIVER_CACHE_KEY.format(self.driver_id))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Review for {self.driver.get_full_name()} by {self.passenger.get_full_name()}"

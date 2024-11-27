@@ -1,16 +1,12 @@
 from django.db import models
-from django.core.validators import RegexValidator
+from utils.validators import DataValidators
 # Create your models here.
 
 class BillingInformation(models.Model):
-    ssn_regex = RegexValidator(
-        regex=r'^\d{3}-\d{2}-\d{4}$',
-        message="Billing ID must be in SSN format: XXX-XX-XXXX"
-    )
     
     billing_id = models.CharField(
         max_length=11, 
-        validators=[ssn_regex], 
+        validators=[DataValidators.validate_ssn], 
         unique=True,
         primary_key=True
     )
