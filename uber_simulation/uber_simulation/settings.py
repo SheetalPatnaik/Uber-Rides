@@ -44,9 +44,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'driver',
+    'rest_framework.authtoken',
+    'users',
+    'billing',
+    'django_redis',
     'rest_framework_simplejwt',
     'corsheaders',
-    'django_filters'
+    'django_filters',
+    'django_extensions',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -90,13 +96,25 @@ WSGI_APPLICATION = 'uber_simulation.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'uber_db',
+        'USER': 'root',
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -165,3 +183,7 @@ CACHES = {
         }
     }
 }
+
+# # Kafka Configuration
+# KAFKA_BROKER = 'localhost:9092'
+# BILLING_EVENTS_TOPIC = 'billing-events'

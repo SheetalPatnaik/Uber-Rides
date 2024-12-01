@@ -12,6 +12,9 @@ from .serializers import DriverSerializer, ReviewSerializer
 import googlemaps
 from django.conf import settings
 from django_filters import rest_framework as filters
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from users.models import Booking
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -43,6 +46,163 @@ def driver_login(request):
         {'error': 'Invalid credentials'}, 
         status=status.HTTP_401_UNAUTHORIZED
     )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def accept_ride(request, ride_id):
+        print("Authenticated driver:", request.user.id)
+        print("Received ride acceptance request")
+        print("Complete request data:", request.data)
+
+        # Step 1: Get authenticated driver's ID
+        driver_id = request.user.id  # Fetch driver_id from the authenticated user
+        print("driver", driver_id)
+
+        # Verify driver exists
+        driver = get_object_or_404(Driver, id=driver_id)
+
+        # Step 2: Validate the ride acceptance data
+        if not ride_id:
+            return Response(
+                {'error': 'ride_id is required to accept a ride'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Step 3: Check if the ride exists and is pending
+        try:
+            ride = Booking.objects.get(booking_id=ride_id, status='pending')
+        except Booking.DoesNotExist:
+            return Response(
+                {'error': 'Ride not found or is not in a pending state'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Step 4: Assign the ride to the driver
+        try:
+            ride.driver = driver
+            ride.status = 'accepted'
+            ride.save()
+
+            return Response({
+                'message': 'Ride accepted successfully',
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'customer_id': ride.customer.customer_id,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                'predicted_fare': str(ride.predicted_fare)
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(f"Error while accepting the ride: {e}")
+            return Response(
+                {'error': 'An error occurred while accepting the ride'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_ride_requests(request):
+    print("Authenticated driver:", request.user.id)
+    print("Fetching ride requests")
+
+    # Step 1: Get authenticated driver's ID
+    driver_id = request.user.id  # Fetch driver_id from the authenticated user
+    print("driver", driver_id)
+
+    # Verify driver exists
+    driver = get_object_or_404(Driver, id=driver_id)
+
+    # Step 2: Fetch rides that are pending or assigned to the driver
+    try:
+        # Filter rides where status is 'pending' or 'accepted' by the current driver
+        rides = Booking.objects.filter(
+            status__in=['Pending'],
+        ).filter(driver__isnull=True) 
+
+        # Serialize the rides
+        serialized_rides = [
+            {
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'customer_id': ride.customer.customer_id,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                'predicted_fare': str(ride.predicted_fare),
+                'created_at': ride.created_at
+            } for ride in rides
+        ]
+
+        return Response(serialized_rides, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(f"Error fetching ride requests: {e}")
+        return Response(
+            {'error': 'An error occurred while fetching ride requests'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_rides(request):
+    print("Authenticated driver:", request.user.id)
+    print("Fetching ride requests")
+
+    # Step 1: Get authenticated driver's ID
+    driver_id = request.user.id  # Fetch driver_id from the authenticated user
+    print("driver", driver_id)
+
+    # Verify driver exists
+    driver = get_object_or_404(Driver, id=driver_id)
+
+    # Step 2: Fetch rides that are pending or assigned to the driver
+    try:
+        # Filter rides where status is 'pending' or 'accepted' by the current driver
+        rides = Booking.objects.filter(
+            driver=driver,
+        )
+
+        # Serialize the rides
+        serialized_rides = [
+            {
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'customer_id': ride.customer.customer_id,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                'predicted_fare': str(ride.predicted_fare),
+                'created_at': ride.created_at
+            } for ride in rides
+        ]
+
+        return Response(serialized_rides, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(f"Error fetching ride requests: {e}")
+        return Response(
+            {'error': 'An error occurred while fetching ride requests'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    
 
 class DriverFilter(filters.FilterSet):
     class Meta:

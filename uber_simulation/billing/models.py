@@ -17,8 +17,8 @@ class BillingInformation(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     source_location = models.CharField(max_length=255)
     destination_location = models.CharField(max_length=255)
-    driver = models.ForeignKey('Driver', on_delete=models.CASCADE)
-    customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
+    driver = models.ForeignKey('driver.Driver', on_delete=models.CASCADE)
+    customer = models.ForeignKey('users.Customer', on_delete=models.CASCADE)
     
     class Meta:
         ordering = ['-date']
