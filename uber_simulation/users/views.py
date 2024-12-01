@@ -186,6 +186,8 @@ from ml_model.predictor import preprocess_and_predict
 import pickle
 import os
 from decimal import Decimal, ROUND_DOWN
+from rides.kafka_producer import send_kafka_message
+from rides.constants import CREATE_RIDE
 
 class BookRideView(APIView):
     authentication_classes = [CustomJWTAuthentication]  # Use the custom JWT authentication
@@ -202,9 +204,10 @@ class BookRideView(APIView):
 
         # Verify customer exists
         customer = get_object_or_404(Customer, customer_id=customer_id)
-       
+        data = request.data.copy()
+        data["customerId"] = customer_id
         # Validate the booking request data
-        serializer = BookingSerializer(data=request.data)
+        serializer = BookingSerializer(data=data)
         if serializer.is_valid():
             try:
                 # Extract current datetime for booking
@@ -241,7 +244,24 @@ class BookRideView(APIView):
 
                 # Add predicted fare to the request data and save the booking
                 booking = serializer.save(customer=customer, predicted_fare=predicted_fare_decimal, status='pending')
-                
+                ride_data = {
+                    'ride_id': booking.booking_id,
+                    "customer_id":customer_id,
+                    "customer_name":"{} {}".format(customer.first_name, customer.last_name),
+                    'predicted_fare': float(predicted_fare_decimal),
+                    'pickup_coordinates': {
+                        'lat': booking.pickup_latitude,
+                        'lng': booking.pickup_longitude
+                    },
+                    'dropoff_coordinates': {
+                        'lat': booking.dropoff_latitude,
+                        'lng': booking.dropoff_longitude
+                    }
+                }
+                send_kafka_message({
+                    "type":CREATE_RIDE,
+                    "data":ride_data
+                })
                 return Response({
                     'message': 'Booking successful',
                     'booking_id': booking.booking_id,

@@ -15,6 +15,8 @@ from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from users.models import Booking
+from rides.kafka_producer import send_kafka_message
+from rides.constants import RIDE_ACCEPTED
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -82,7 +84,24 @@ def accept_ride(request, ride_id):
             ride.driver = driver
             ride.status = 'accepted'
             ride.save()
-
+            ride_data = {
+                'ride_id': ride_id,
+                "driver_id":driver_id,
+                "driver_name":"{} {}".format(driver.first_name, driver.last_name),
+                'predicted_fare': float(ride.predicted_fare),
+                'pickup_coordinates': {
+                    'lat': float(ride.pickup_latitude),
+                    'lng': float(ride.pickup_longitude)
+                },
+                'dropoff_coordinates': {
+                    'lat': float(ride.dropoff_latitude),
+                    'lng': float(ride.dropoff_longitude)
+                }
+            }
+            send_kafka_message({
+                "type":RIDE_ACCEPTED,
+                "data":ride_data
+            })
             return Response({
                 'message': 'Ride accepted successfully',
                 'ride_id': ride.booking_id,

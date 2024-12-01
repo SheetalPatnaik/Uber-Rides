@@ -45,7 +45,6 @@ class Driver(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(
         max_length=16,
-        validators=[DataValidators.validate_ssn],
         unique=True
     )
     address = models.CharField(max_length=255)
