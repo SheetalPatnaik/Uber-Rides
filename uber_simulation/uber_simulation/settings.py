@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'users',
     'billing',
-    'django_redis',
+    #'django_redis',
     'rest_framework_simplejwt',
     'corsheaders',
     'django_filters',
@@ -174,15 +174,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #Google Maps API Key
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 #Caching
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        }
-    }
-}
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": "redis://127.0.0.1:6379/1",
+#         "OPTIONS": {
+#             "CLIENT_CLASS": "django_redis.client.DefaultClient"
+#         }
+#     }
+# }
 
 # # Kafka Configuration
 # KAFKA_BROKER = 'localhost:9092'
