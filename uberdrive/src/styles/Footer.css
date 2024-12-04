@@ -1,0 +1,161 @@
+.footer {
+    background-color: #000;
+    color: #fff;
+    padding: 48px 0;
+  }
+
+.social-icons {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  
+  .social-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .social-icon img {
+    width: 100%;
+    height: 100%;
+    filter: invert(1); /* Makes black icons white */
+  }
+  
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+  
+  .footer-logo a {
+    color: #fff;
+    font-size: 24px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .help-center-link {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .footer-links {
+    margin-bottom: 48px;
+  }
+  
+  .footer-links h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 24px;
+  }
+  
+  .footer-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footer-links li {
+    margin-bottom: 16px;
+  }
+  
+  .footer-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .footer-social {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 24px;
+  }
+  
+  .social-icon {
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+  }
+  
+  .location-language {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .lang-btn, .location-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .app-downloads {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  
+  .google-play, .app-store {
+    width: 135px;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+  }
+  
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 24px;
+  }
+  
+  .privacy-links {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+  }
+  
+  .privacy-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  @media (max-width: 768px) {
+    .footer-top, .footer-social {
+      flex-direction: column;
+      gap: 24px;
+      align-items: flex-start;
+    }
+  
+    .footer-links h3 {
+      margin-top: 24px;
+    }
+  
+    .privacy-links {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
