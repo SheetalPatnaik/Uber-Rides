@@ -1,0 +1,160 @@
+/* DriverRides.css */
+.driver-rides {
+    min-height: 100vh;
+    background-color: #f8f8f8;
+  }
+  
+  .driver-rides-nav {
+    background-color: #000;
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+  
+  .driver-rides-nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .driver-rides-brand {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  
+  .driver-rides-nav-links {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  .driver-rides-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+  }
+  
+  .driver-rides-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .driver-rides-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .driver-rides-container {
+    margin-top: 100px;
+    padding: 2rem 0;
+  }
+  
+  .ride-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .ride-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .ride-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+  
+  .ride-status.pending {
+    background: #fff3cd;
+    color: #856404;
+  }
+  
+  .ride-card-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  .accept-btn, .reject-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .accept-btn {
+    background: #28a745;
+    color: #fff;
+  }
+  
+  .reject-btn {
+    background: #dc3545;
+    color: #fff;
+  }
+  
+  .rides-table-wrapper {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+  
+  .rides-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .rides-table th,
+  .rides-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+  }
+  
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+  }
+  
+  .status-badge.completed {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  @media (max-width: 991.98px) {
+    .driver-rides-nav-content {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .driver-rides-container {
+      margin-top: 160px;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .driver-rides-nav-links {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+  
+    .rides-table {
+      font-size: 0.875rem;
+    }
+  }

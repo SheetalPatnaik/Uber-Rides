@@ -16,7 +16,7 @@ const HomePage = () => {
           </Nav.Item>
           <Nav className="me-auto">
             <Nav.Link href="/ride">Ride</Nav.Link>
-            <Nav.Link href="/drive">Drive</Nav.Link>
+            <Nav.Link href="/driver/dashboard">Drive</Nav.Link>
             <Nav.Link href="/business">Business</Nav.Link>
             <Nav.Link href="/uber-eats">Uber Eats</Nav.Link>
             <Nav.Link href="/about">About</Nav.Link>
