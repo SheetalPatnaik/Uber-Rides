@@ -1,0 +1,237 @@
+/* DriverDashboard.css */
+.driver-dash {
+    min-height: 100vh;
+    background-color: #ffffff;
+  }
+  
+  .driver-dash-nav {
+    background-color: #000;
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+  
+  .driver-dash-brand {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-right: 2rem;
+  }
+  
+  .driver-dash-brand:hover {
+    color: #fff;
+  }
+  
+  .driver-dash-nav-links {
+    display: flex;
+    align-items: center;
+  }
+  
+  .driver-dash-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    margin: 0 1rem;
+    transition: color 0.2s ease;
+  }
+  
+  .driver-dash-link:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .driver-dash-link.active {
+    color: #fff;
+    border-bottom: 2px solid #fff;
+  }
+  
+  .driver-dash-hero {
+    background-color: #000;
+    color: #fff;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .driver-dash-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+  }
+  
+  .driver-dash-subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  
+  .driver-dash-image-wrapper {
+    height: 600px;
+    width: 100%;
+  }
+  
+  .driver-dash-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .driver-dash-safety-features {
+    margin-top: 3rem;
+  }
+  
+  .driver-dash-feature {
+    padding: 2rem;
+    text-align: left;
+  }
+  
+  .driver-dash-feature h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+  }
+  
+  .driver-dash-feature p {
+    color: #666;
+    margin-bottom: 1rem;
+  }
+  
+  .driver-dash-feature-icon {
+    width: 48px;
+    height: 48px;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  
+  .driver-dash-feature-icon.protection {
+    background-image: url('../images/icon1.svg');
+  }
+  
+  .driver-dash-feature-icon.help {
+    background-image: url('../images/icon2.svg');
+  }
+  
+  .driver-dash-feature-icon.community {
+    background-image: url('../images/icon3.svg');
+  }
+  
+  .driver-dash-link-text {
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .driver-dash-image-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .driver-dash-hero-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .driver-dash-safety {
+    padding: 80px 0;
+  }
+  
+  .driver-dash-section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  
+  .driver-dash-section-subtitle {
+    font-size: 1.25rem;
+    color: #666;
+    margin-bottom: 3rem;
+  }
+  
+  .driver-dash-link-text:hover {
+    text-decoration: underline;
+  }
+  
+  
+  @media (max-width: 991.98px) {
+    .driver-dash-nav-links {
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 1rem;
+    }
+  
+    .driver-dash-link {
+      margin: 0;
+    }
+  
+    .driver-dash-hero {
+      min-height: auto;
+      padding: 60px 0;
+    }
+  
+    .driver-dash-image-wrapper {
+      height: 400px;
+      margin-top: 2rem;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .driver-dash-nav-links {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+  
+    .driver-dash-brand {
+      text-align: center;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+  
+    .driver-dash-image-wrapper {
+      height: 300px;
+    }
+  }
+
+  @media (max-width: 991.98px) {
+    .driver-dash-title {
+      font-size: 2.5rem;
+    }
+    
+    .driver-dash-hero {
+      text-align: center;
+      padding: 60px 0;
+    }
+    
+    .driver-dash-image-wrapper {
+      margin-top: 2rem;
+    }
+    
+    .driver-dash-feature {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .driver-dash-feature-icon {
+      margin: 0 auto;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .driver-dash-title {
+      font-size: 2rem;
+    }
+    
+    .driver-dash-safety {
+      padding: 40px 0;
+    }
+    
+    .driver-dash-section-title {
+      font-size: 2rem;
+    }
+  }

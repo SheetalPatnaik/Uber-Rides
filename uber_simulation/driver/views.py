@@ -15,6 +15,10 @@ from django_filters import rest_framework as filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from users.models import Booking
+from rides.kafka_producer import send_kafka_message
+from rides.constants import RIDE_ACCEPTED
+from rest_framework.exceptions import NotFound
+
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -82,7 +86,24 @@ def accept_ride(request, ride_id):
             ride.driver = driver
             ride.status = 'accepted'
             ride.save()
-
+            ride_data = {
+                'ride_id': ride_id,
+                "driver_id":driver_id,
+                "driver_name":"{} {}".format(driver.first_name, driver.last_name),
+                'predicted_fare': float(ride.predicted_fare),
+                'pickup_coordinates': {
+                    'lat': float(ride.pickup_latitude),
+                    'lng': float(ride.pickup_longitude)
+                },
+                'dropoff_coordinates': {
+                    'lat': float(ride.dropoff_latitude),
+                    'lng': float(ride.dropoff_longitude)
+                }
+            }
+            send_kafka_message({
+                "type":RIDE_ACCEPTED,
+                "data":ride_data
+            })
             return Response({
                 'message': 'Ride accepted successfully',
                 'ride_id': ride.booking_id,
@@ -203,6 +224,18 @@ def get_rides(request):
         )
 
     
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def upload_driver_video(request):
+    driver = request.user
+    video = request.FILES.get('video')
+    
+    if not video:
+        return Response({'error': 'No video file provided'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    driver.introduction_video = video
+    driver.save()
+    return Response({'message': 'Video uploaded successfully'}, status=status.HTTP_200_OK)
 
 class DriverFilter(filters.FilterSet):
     class Meta:
@@ -220,12 +253,13 @@ class DriverFilter(filters.FilterSet):
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = Driver.objects.all()
     serializer_class = DriverSerializer
-    permission_classes = [AllowAny]
+    #permission_classes = [IsAuthenticated]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = DriverFilter
-
+    lookup_field = 'user_id'
     def get_object(self):
         pk = self.kwargs.get('pk')
+        
         cache_key = Driver.DRIVER_CACHE_KEY.format(pk)
         
         # Try to get from cache
@@ -238,6 +272,7 @@ class DriverViewSet(viewsets.ModelViewSet):
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
+        
         # Check for duplicate driver
         email = request.data.get('email')
         phone = request.data.get('phone_number')
@@ -310,7 +345,6 @@ class DriverViewSet(viewsets.ModelViewSet):
             
         return Response(result)
     
-    
 
     def perform_create(self, serializer):
         serializer.save()
@@ -330,6 +364,13 @@ def update_profile(request):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_driver_profile(request):
+    driver = request.user
+    serializer = DriverSerializer(driver)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def add_review(request, driver_id):

@@ -1,6 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from driver.models import Driver
+import random
+
+def getRandomId():
+    random_number1 = random.randint(1000, 9999)
+    random_number2 = random.randint(1000, 9999)
+    chatId = 'C{}{}'.format(random_number1, random_number2)
+    customer = Customer.objects.filter(chat_id=chatId).first()
+    while customer is not None:
+        random_number1 = random.randint(1000, 9999)
+        random_number2 = random.randint(1000, 9999)
+        chatId = 'C{}{}'.format(random_number1, random_number2)
+        customer = Customer.objects.filter(chat_id=chatId).first()
+
+    return chatId
 
 # models.py
 class Customer(AbstractBaseUser):
@@ -15,10 +29,17 @@ class Customer(AbstractBaseUser):
     email = models.EmailField(unique=True)
     credit_card = models.CharField(max_length=20)
     password = models.CharField(max_length=255, null=True)
+    chat_id = models.CharField(max_length=255, null=True)
+
 
     # for jwt
     USERNAME_FIELD = 'customer_id'
     REQUIRED_FIELDS = ['username']
+
+    def save(self, *args, **kwargs) -> None:
+        if not self.chat_id:
+            self.chat_id = getRandomId() 
+        return super().save(*args, **kwargs)
 
 
 class Booking(models.Model):

@@ -42,10 +42,10 @@ class Driver(AbstractUser):
     )
 
     username = None
+    driver_id = models.CharField(max_length=11, unique=True, validators=[DataValidators.validate_ssn], null=False, blank=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(
         max_length=16,
-        validators=[DataValidators.validate_ssn],
         unique=True
     )
     address = models.CharField(max_length=255)
@@ -80,6 +80,7 @@ class Driver(AbstractUser):
         cache.delete(self.TOP_RATED_DRIVERS_CACHE_KEY)
         super().save(*args, **kwargs)
 
+    
     def update_current_location(self):
         """
         Updates driver's current location using Google Maps Geolocation API
@@ -88,7 +89,7 @@ class Driver(AbstractUser):
         
         try:
             geolocation_result = gmaps.geolocate()
-            if geolocation_result:
+            if geolocation_result and 'location' in geolocation_result:
                 self.current_location_lat = geolocation_result['location']['lat']
                 self.current_location_lng = geolocation_result['location']['lng']
                 self.save()
