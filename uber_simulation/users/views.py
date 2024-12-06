@@ -12,13 +12,14 @@ from django.contrib.auth.hashers import check_password
 
 @csrf_exempt
 def register_customer(request):
+    print("Inside register_customer function")
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
             
             # Extract the customer ID (SSN) from the request
             customer_id = data.get('customer_id')
-            
+            print("customer_id", customer_id)
             # Check if the customer ID (SSN) already exists
             if Customer.objects.filter(customer_id=customer_id).exists():
                 return JsonResponse(
@@ -33,7 +34,7 @@ def register_customer(request):
                     {'error': 'Password is required'}, 
                     status=400
                 )
-
+            print(data)
             # Create a new customer record
             customer = Customer.objects.create(
                 customer_id=customer_id,
@@ -73,7 +74,7 @@ def login_customer(request):
             data = json.loads(request.body)
             
             # Extract the customer ID (SSN) and password from the request data
-            customer_id = data.get('customerId')
+            customer_id = data.get('customer_id')
             password = data.get('password')
             
             if not customer_id or not password:
@@ -94,7 +95,7 @@ def login_customer(request):
             
             print("step3")
             
-            
+            print(data)
             # Generate custom JWT tokens (access and refresh) without using for_user
             refresh = RefreshToken()
             refresh['customer_id'] = customer.customer_id  # Custom claim

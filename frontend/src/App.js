@@ -6,14 +6,20 @@ import DriverSignupForm from './components/DriverSignupForm';
 import DriverDashboard from './components/DriverDashboard';
 import DriverProfile from './components/DriverProfile';
 import DriverRides from './components/DriverRides';
+import BookRide from './components/BookRide';
+import CustomerLogin from './components/CustomerLogin';
+import CustomerSignupForm from './components/CustomerSignupForm';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<DriverLoginForm />} />
-        <Route path="/signup" element={<DriverSignupForm />} />
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route path="/customer/signup" element={<CustomerSignupForm />} />
+        <Route path="/customer/book-ride" element={<BookRide />} />
+        <Route path="/driver/login" element={<DriverLoginForm />} />
+        <Route path="/driver/signup" element={<DriverSignupForm />} />
         <Route path="/driver/dashboard" element={<DriverDashboard />} />
         <Route path="/driver/profile" element={<DriverProfile />} />
         <Route path="/driver/rides" element={<DriverRides />} />

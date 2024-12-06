@@ -1,27 +1,28 @@
 import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
 import { Form, Button, Container, Row, Col, Card, Alert } from 'react-bootstrap';
-import { registerCustomer } from '../services/api';  // Import API function
+import axios from 'axios';
 
 const libraries = ['places'];
 
 const CustomerSignupForm = () => {
   const [formData, setFormData] = useState({
-    customerId: '',
-    firstName: '',
-    lastName: '',
+    customer_id: '',
+    first_name: '',
+    last_name: '',
     address: '',
     city: '',
     state: '',
-    zipCode: '',
-    phoneNumber: '',
+    zip_code: '',
+    phone_number: '',
     email: '',
-    creditCard: '',
+    credit_card: '',
     password: '', // Add password to state
   });
 
   const [autocomplete, setAutocomplete] = useState(null);
   const [errorMessages, setErrorMessages] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Regular expressions for validation
   const ssnRegex = /^\d{3}-\d{2}-\d{4}$/;
@@ -42,16 +43,16 @@ const CustomerSignupForm = () => {
 
       let city = '';
       let state = '';
-      let zipCode = '';
+      let zip_code = '';
 
       components.forEach((component) => {
         const types = component.types;
         if (types.includes('locality')) city = component.long_name;
         if (types.includes('administrative_area_level_1')) state = component.short_name;
-        if (types.includes('postal_code')) zipCode = component.long_name;
+        if (types.includes('postal_code')) zip_code = component.long_name;
       });
 
-      setFormData({ ...formData, address, city, state, zipCode });
+      setFormData({ ...formData, address, city, state, zip_code });
     }
   };
 
@@ -59,7 +60,7 @@ const CustomerSignupForm = () => {
     const errors = [];
 
     // SSN validation
-    if (!ssnRegex.test(formData.customerId)) {
+    if (!ssnRegex.test(formData.customer_id)) {
       errors.push('Customer ID must be in the format XXX-XX-XXXX');
     }
 
@@ -69,12 +70,12 @@ const CustomerSignupForm = () => {
     }
 
     // Credit Card validation
-    if (!creditCardRegex.test(formData.creditCard)) {
+    if (!creditCardRegex.test(formData.credit_card)) {
       errors.push('Credit Card must be a valid format');
     }
 
     // Phone Number validation
-    if (!phoneNumberRegex.test(formData.phoneNumber)) {
+    if (!phoneNumberRegex.test(formData.phone_number)) {
       errors.push('Phone Number must be in the format (XXX) XXX-XXXX or XXX-XXX-XXXX');
     }
 
@@ -83,7 +84,6 @@ const CustomerSignupForm = () => {
       errors.push('Password must be at least 6 characters long');
     }
 
-    // Check if any errors
     return errors;
   };
 
@@ -99,15 +99,30 @@ const CustomerSignupForm = () => {
 
     setErrorMessages([]); // Reset errors
 
-    const response = await registerCustomer(formData);
+    try {
+      const response = await axios.post('http://localhost:8000/api/register-customer/', formData);
 
-    if (response.message) {
-      alert('Customer registered successfully!');
-      window.location.reload();
-    } else {
-      alert('Customer with same SSN already exists');
+      if (response.data.message) {
+        setSuccessMessage('Customer registered successfully!');
+        setFormData({
+          customer_id: '',
+          first_name: '',
+          last_name: '',
+          address: '',
+          city: '',
+          state: '',
+          zip_code: '',
+          phone_number: '',
+          email: '',
+          credit_card: '',
+          password: '',
+        });
+      } else {
+        setErrorMessages(['Customer with the same SSN already exists.']);
+      }
+    } catch (error) {
+      setErrorMessages(['An error occurred while registering the customer. Please try again later.']);
     }
-    
   };
 
   return (
@@ -127,6 +142,7 @@ const CustomerSignupForm = () => {
                     </ul>
                   </Alert>
                 )}
+                {successMessage && <Alert variant="success">{successMessage}</Alert>}
 
                 <Form.Group controlId="formCustomerId">
                   <Form.Label>
@@ -135,45 +151,39 @@ const CustomerSignupForm = () => {
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    name="customerId"
-                    value={formData.customerId}
+                    name="customer_id"
+                    value={formData.customer_id}
                     onChange={handleInputChange}
                     required
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formFirstName">
-                  <Form.Label>
-                    First Name <span style={{ color: 'red' }}>*</span>
-                  </Form.Label>
+                <Form.Group controlId="formFirstName" className="mt-3">
+                  <Form.Label>First Name <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Form.Control
                     type="text"
-                    name="firstName"
-                    value={formData.firstName}
+                    name="first_name"
+                    value={formData.first_name}
                     onChange={handleInputChange}
                     required
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formLastName">
-                  <Form.Label>
-                    Last Name <span style={{ color: 'red' }}>*</span>
-                  </Form.Label>
+                <Form.Group controlId="formLastName" className="mt-3">
+                  <Form.Label>Last Name <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Form.Control
                     type="text"
-                    name="lastName"
-                    value={formData.lastName}
+                    name="last_name"
+                    value={formData.last_name}
                     onChange={handleInputChange}
                     required
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formAddress">
-                  <Form.Label>
-                    Address <span style={{ color: 'red' }}>*</span>
-                  </Form.Label>
+                <Form.Group controlId="formAddress" className="mt-3">
+                  <Form.Label>Address <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Autocomplete
-                    onLoad={(autocompleteInstance) => setAutocomplete(autocompleteInstance)}
+                    onLoad={setAutocomplete}
                     onPlaceChanged={handlePlaceSelect}
                   >
                     <Form.Control
@@ -186,40 +196,52 @@ const CustomerSignupForm = () => {
                   </Autocomplete>
                 </Form.Group>
 
-                <Form.Group controlId="formCity">
-                  <Form.Label>City</Form.Label>
-                  <Form.Control type="text" name="city" value={formData.city} readOnly />
-                </Form.Group>
-
-                <Form.Group controlId="formState">
-                  <Form.Label>State</Form.Label>
-                  <Form.Control type="text" name="state" value={formData.state} readOnly />
-                </Form.Group>
-
-                <Form.Group controlId="formZipCode">
-                  <Form.Label>Zip Code</Form.Label>
-                  <Form.Control type="text" name="zipCode" value={formData.zipCode} readOnly />
-                </Form.Group>
-
-                <Form.Group controlId="formPhoneNumber">
-                  <Form.Label>
-                    Phone Number <span style={{ color: 'red' }}>*</span>
-                    <small className="form-text text-muted">Format: (XXX) XXX-XXXX or XXX-XXX-XXXX</small>
-                  </Form.Label>
+                <Form.Group controlId="formCity" className="mt-3">
+                  <Form.Label>City <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Form.Control
                     type="text"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
+                    name="city"
+                    value={formData.city}
                     onChange={handleInputChange}
                     required
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formEmail">
-                  <Form.Label>
-                    Email <span style={{ color: 'red' }}>*</span>
-                    <small className="form-text text-muted">Must be a valid Gmail address</small>
-                  </Form.Label>
+                <Form.Group controlId="formState" className="mt-3">
+                  <Form.Label>State <span style={{ color: 'red' }}>*</span></Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="state"
+                    value={formData.state}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formZipCode" className="mt-3">
+                  <Form.Label>ZIP Code <span style={{ color: 'red' }}>*</span></Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="zip_code"
+                    value={formData.zip_code}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formPhoneNumber" className="mt-3">
+                  <Form.Label>Phone Number <span style={{ color: 'red' }}>*</span></Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="phone_number"
+                    value={formData.phone_number}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formEmail" className="mt-3">
+                  <Form.Label>Email <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Form.Control
                     type="email"
                     name="email"
@@ -229,25 +251,19 @@ const CustomerSignupForm = () => {
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formCreditCard">
-                  <Form.Label>
-                    Credit Card Details <span style={{ color: 'red' }}>*</span>
-                    <small className="form-text text-muted">Format: XXXX-XXXX-XXXX-XXXX</small>
-                  </Form.Label>
+                <Form.Group controlId="formCreditCard" className="mt-3">
+                  <Form.Label>Credit Card <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Form.Control
                     type="text"
-                    name="creditCard"
-                    value={formData.creditCard}
+                    name="credit_card"
+                    value={formData.credit_card}
                     onChange={handleInputChange}
                     required
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formPassword">
-                  <Form.Label>
-                    Password <span style={{ color: 'red' }}>*</span>
-                    <small className="form-text text-muted">Password must be at least 6 characters long</small>
-                  </Form.Label>
+                <Form.Group controlId="formPassword" className="mt-3">
+                  <Form.Label>Password <span style={{ color: 'red' }}>*</span></Form.Label>
                   <Form.Control
                     type="password"
                     name="password"
@@ -257,9 +273,11 @@ const CustomerSignupForm = () => {
                   />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" block className="mt-4">
-                  Submit
-                </Button>
+                <div className="d-flex justify-content-center mt-4">
+                  <Button type="submit" className="btn-primary">
+                    Register
+                  </Button>
+                </div>
               </Form>
             </Card>
           </Col>

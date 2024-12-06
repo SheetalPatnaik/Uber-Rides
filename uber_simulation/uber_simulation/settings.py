@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'users',
     'billing',
     'rides',
+    'administrator',
     'django_redis',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -70,10 +71,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     
 ]
+AUTH_USER_MODEL = 'administrator.Administrator'
 
+AUTHENTICATION_BACKENDS = [
+    'administrator.authentication.AdministratorBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ['*']
+CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization', 'X-CSRFToken', 'Access-Control-Allow-Origin', 'authorization']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
