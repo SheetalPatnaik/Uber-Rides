@@ -6,6 +6,7 @@ class DataValidators:
     @staticmethod
     def validate_ssn(value):
         pattern = r'^\d{3}-\d{2}-\d{4}$'
+        print(value)
         if not re.match(pattern, value):
             raise ValidationError('Invalid SSN format. Must be XXX-XX-XXXX')
 

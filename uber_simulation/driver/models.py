@@ -42,7 +42,9 @@ class Driver(AbstractUser):
     )
 
     username = None
-    driver_id = models.CharField(max_length=11, unique=True, validators=[DataValidators.validate_ssn], null=False, blank=False)
+    driver_id = models.CharField(max_length=11, unique=True, 
+                                 validators=[DataValidators.validate_ssn], 
+                                 null=False, blank=False, default="059-34-0593")
     email = models.EmailField(unique=True)
     phone_number = models.CharField(
         max_length=16,

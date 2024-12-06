@@ -2,9 +2,8 @@
 
 from django.urls import path
 from .views import (
-    admin_login, admin_dashboard, add_driver, add_customer,
-    DriverListView, CustomerListView, ReviewAccountView, BillSearchView,
-    statistics_view, graphs_data_view, BillDetailView
+    admin_login, admin_dashboard,
+    DriverListView
 )
 
 urlpatterns = [

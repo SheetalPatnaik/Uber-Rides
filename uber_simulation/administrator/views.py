@@ -12,7 +12,7 @@ from driver.models import Driver
 from users.models import Customer, Booking
 from billing.models import BillingInformation
 from driver.serializers import DriverSerializer
-from users.serializers import BookingSerializer, CustomerSerializer
+from users.serializers import BookingSerializer
 from billing.serializers import BillingSerializer
 from .models import Administrator
 from .serializers import AdministratorSerializer
@@ -65,27 +65,27 @@ def admin_dashboard(request):
 #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Review account view
-class ReviewAccountView(APIView):
-    permission_classes = [IsAuthenticated]
+# class ReviewAccountView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        if not isinstance(request.user, Administrator):
-            return Response({'error': 'Permission denied.'}, status=403)
+#     def get(self, request):
+#         if not isinstance(request.user, Administrator):
+#             return Response({'error': 'Permission denied.'}, status=403)
 
-        driver_id = request.query_params.get('driver_id')
-        customer_id = request.query_params.get('customer_id')
+#         driver_id = request.query_params.get('driver_id')
+#         customer_id = request.query_params.get('customer_id')
 
-        if driver_id:
-            driver = get_object_or_404(Driver, id=driver_id)
-            serializer = DriverSerializer(driver)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+#         if driver_id:
+#             driver = get_object_or_404(Driver, id=driver_id)
+#             serializer = DriverSerializer(driver)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        if customer_id:
-            customer = get_object_or_404(Customer, customer_id=customer_id)
-            serializer = CustomerSerializer(customer)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+#         if customer_id:
+#             customer = get_object_or_404(Customer, customer_id=customer_id)
+#             serializer = CustomerSerializer(customer)
+#             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response({"error": "Please provide a driver_id or customer_id"}, status=status.HTTP_400_BAD_REQUEST)
+#         return Response({"error": "Please provide a driver_id or customer_id"}, status=status.HTTP_400_BAD_REQUEST)
 
 # Statistics view
 @api_view(['GET'])
@@ -180,13 +180,13 @@ class DriverListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Customer list view
-class CustomerListView(APIView):
-    permission_classes = [IsAuthenticated]
+# class CustomerListView(APIView):
+#     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        if not isinstance(request.user, Administrator):
-            return Response({'error': 'Permission denied.'}, status=403)
+#     def get(self, request):
+#         if not isinstance(request.user, Administrator):
+#             return Response({'error': 'Permission denied.'}, status=403)
 
-        customers = Customer.objects.all()
-        serializer = CustomerSerializer(customers, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#         customers = Customer.objects.all()
+#         serializer = CustomerSerializer(customers, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)

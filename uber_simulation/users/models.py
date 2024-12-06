@@ -44,10 +44,10 @@ class Customer(AbstractBaseUser):
 
 class Booking(models.Model):
     STATUS_CHOICES = [
-        ('Pending', 'Pending'),
-        ('Accepted', 'Accepted'),
-        ('Rejected', 'Rejected'),
-        ('Completed', 'Completed'),
+        ('pending', 'pending'),
+        ('accepted', 'accepted'),
+        ('rejected', 'rejected'),
+        ('completed', 'completed'),
     ]
 
     booking_id = models.AutoField(primary_key=True)

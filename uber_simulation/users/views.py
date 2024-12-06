@@ -189,6 +189,25 @@ import os
 from decimal import Decimal, ROUND_DOWN
 from rides.kafka_producer import send_kafka_message
 from rides.constants import CREATE_RIDE
+# views.py
+from django.db import connection
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from utils.util import filterDrivers
+
+class FilterDriversView(APIView):
+    def post(self, request):
+        try:
+            # Get pickup coordinates from request parameters
+            pickupCoordinates = request.data.get("pickupCoordinates")
+            pickup_lat = float(pickupCoordinates.get('lat'))
+            pickup_lng = float(pickupCoordinates.get('lng'))
+        except (TypeError, ValueError):
+            return Response({"error": "Invalid or missing coordinates."}, status=400)
+
+        drivers = filterDrivers(pickup_lat, pickup_lng)
+        return Response(drivers)
+
 
 class BookRideView(APIView):
     authentication_classes = [CustomJWTAuthentication]  # Use the custom JWT authentication
@@ -205,10 +224,32 @@ class BookRideView(APIView):
 
         # Verify customer exists
         customer = get_object_or_404(Customer, customer_id=customer_id)
+        # Step 2: check if customer is already in ride
+        customer_ride = Booking.objects.filter(
+            status__in=['pending','accepted'],customer=customer).first()
+        if customer_ride:
+            return Response(
+                {'error': 'Customer cannot create 2 rides at a time.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         data = request.data.copy()
+        try:
+            # Get pickup coordinates from request parameters
+            pickupCoordinates = data.get("pickupCoordinates")
+            pickup_lat = float(pickupCoordinates.get('lat'))
+            pickup_lng = float(pickupCoordinates.get('lng'))
+        except (TypeError, ValueError):
+            return Response({"error": "Invalid or missing coordinates."}, status=400)
+
+        drivers = filterDrivers(pickup_lat, pickup_lng)
+        if len(drivers)==0:
+            return Response({"error": "No driver found within 10 miles"}, status=400)
+        # print(drivers)
         data["customerId"] = customer_id
+        # data["available_drivers"] = [ driver.get("driver_id") for driver in drivers]
         # Validate the booking request data
         serializer = BookingSerializer(data=data)
+        # print(data)
         if serializer.is_valid():
             try:
                 # Extract current datetime for booking

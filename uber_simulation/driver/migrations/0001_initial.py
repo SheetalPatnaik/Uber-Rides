@@ -77,16 +77,6 @@ class Migration(migrations.Migration):
                         default=django.utils.timezone.now, verbose_name="date joined"
                     ),
                 ),
-                (
-                    "driver_id",
-                    models.CharField(
-                        max_length=11,
-                        unique=True,
-                        validators=[
-                            utils.validators.validators.DataValidators.validate_ssn
-                        ],
-                    ),
-                ),
                 ("email", models.EmailField(max_length=254, unique=True)),
                 ("phone_number", models.CharField(max_length=16, unique=True)),
                 ("address", models.CharField(max_length=255)),
