@@ -27,9 +27,11 @@ const DriverProfile = () => {
    try {
      const response = await axios.get(`http://localhost:8000/api/driver/profile`, {
        headers: {
-         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+         'Content-Type': 'application/json',
        }
      });
+     console.log(response)
      setDriverData(response.data);
      if (response.data.profile_photo) {
        setPreviewImage(response.data.profile_photo);
@@ -124,7 +126,7 @@ const DriverProfile = () => {
 
  return (
    <div className="driver-profile">
-     <SharedNavbar />
+     {/* <SharedNavbar /> */}
     
      <Container className="driver-profile-container">
        <div className="driver-profile-header">
