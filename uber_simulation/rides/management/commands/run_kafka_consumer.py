@@ -71,6 +71,34 @@ class Command(BaseCommand):
                                         'message': data,
                                     }
                                 ) 
+                            driver_ids = list(Driver.objects.all().values_list("id", flat=True))
+                            for driver_id in driver_ids:
+                                async_to_sync(channel_layer.group_send)(
+                                    str(driver_id),  # The group name for WebSocket clients
+                                    {
+                                        'type': 'ride_accepted',
+                                        'message': data,
+                                    }
+                                ) 
+                    elif data.get("type")==RIDE_COMPLETED:
+                        if data.get("data"):
+                            ride_id = data.get("data").get("ride_id")
+                            ride = Booking.objects.filter(booking_id=ride_id).first()
+                            if ride and ride.customer:
+                                chat_id = ""
+                                if ride.customer.chat_id:
+                                    chat_id = ride.customer.chat_id
+                                else:
+                                    chat_id = getRandomId()
+                                    ride.customer.chat_id = chat_id
+                                    ride.customer.save()
+                                async_to_sync(channel_layer.group_send)(
+                                    chat_id,  # The group name for WebSocket clients
+                                    {
+                                        'type': 'ride_accepted',
+                                        'message': data,
+                                    }
+                                ) 
                                 
                      # Send the message to WebSocket clients
                     # group_ids = data.get("group_ids",[])

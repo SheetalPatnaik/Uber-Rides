@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from users.models import Booking
 from rides.kafka_producer import send_kafka_message
-from rides.constants import RIDE_ACCEPTED
+from rides.constants import RIDE_ACCEPTED, RIDE_COMPLETED
 from rest_framework.exceptions import NotFound
 from utils.util import getRideRequest
 
@@ -169,6 +169,24 @@ def complete_ride(request, ride_id):
         try:
             ride.status = 'completed'
             ride.save()
+            ride_data = {
+                'ride_id': ride_id,
+                "driver_id":driver_id,
+                "driver_name":"{} {}".format(driver.first_name, driver.last_name),
+                'predicted_fare': float(ride.predicted_fare),
+                'pickup_coordinates': {
+                    'lat': float(ride.pickup_latitude),
+                    'lng': float(ride.pickup_longitude)
+                },
+                'dropoff_coordinates': {
+                    'lat': float(ride.dropoff_latitude),
+                    'lng': float(ride.dropoff_longitude)
+                }
+            }
+            send_kafka_message({
+                "type":RIDE_COMPLETED,
+                "data":ride_data
+            })
             return Response({
                 'message': 'Ride completed successfully',
                 'ride_id': ride.booking_id,

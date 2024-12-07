@@ -67,6 +67,11 @@ class DriverConsumerWebSocket(BasicConsumerWebSocket):
         message = event['message']
         await self.send(text_data=json.dumps({'message': message}))
 
+    async def ride_accepted(self, event):
+        # Send the Kafka message to the WebSocket client
+        message = event['message']
+        await self.send(text_data=json.dumps({'message': message}))
+
 class CustomerConsumerWebSocket(BasicConsumerWebSocket):
     async def connect(self):
         token = self.scope['url_route']['kwargs']["token"]
