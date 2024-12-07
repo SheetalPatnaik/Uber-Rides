@@ -14,6 +14,7 @@ urlpatterns = [
     path('profile', get_driver_profile, name='driver-profile'),
     path('<int:driver_id>/reviews/', add_review, name='add_review'),
     path('accept-ride/<int:ride_id>', accept_ride, name='accept-ride'),
+    path('pick-rider/<int:ride_id>', pick_rider, name='pick-rider'),
     path('complete-ride/<int:ride_id>', complete_ride, name='complete-ride'),
     path('ride-requests/', get_ride_requests, name='ride-requests'),
     path('ongoing-ride/', get_ongoing_ride, name='ongoing-ride'),

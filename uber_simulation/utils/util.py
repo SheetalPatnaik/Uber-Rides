@@ -16,7 +16,7 @@ def filterDrivers(pickup_lat, pickup_lng):
                     sin(radians(%s)) * sin(radians(driver.current_location_lat))
                 )) AS distance
             FROM driver_driver driver
-            left join users_booking ride on ride.driver_id=driver.id and ride.status='accepted'
+            left join users_booking ride on ride.driver_id=driver.id and ride.status in ('accepted', 'picked')
             where ride.booking_id is null
             HAVING distance <= 16.0934 -- 10 miles in kilometers
             ORDER BY distance;

@@ -6,6 +6,7 @@ from .models import Customer
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
+from rest_framework.decorators import permission_classes, api_view, authentication_classes
 
 
 # views.py
@@ -368,6 +369,106 @@ class BookRideView(APIView):
             )
 
     
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def get_ongoing_ride(request):
+    print("Authenticated user:", request.user.customer_id)
+    print("Received booking request")
+    print("Complete request data:", request.data)
+    
+    # Step 1: Get authenticated user's ID
+    customer_id = request.user.customer_id  # Fetch customer_id from the authenticated user
+    print("customer", customer_id)
+
+    # Verify customer exists
+    customer = get_object_or_404(Customer, customer_id=customer_id)
+
+    # Step 2: Fetch rides that are pending or assigned to the driver
+    try:
+        # Filter rides where status is 'pending' or 'accepted' by the current driver
+        rides = Booking.objects.filter(
+            customer=customer,status__in=['pending','accepted', 'picked']
+        )
+
+        # Serialize the rides
+        serialized_rides = [
+            {
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'driver_id': ride.driver.driver_id if ride.driver else None,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                'predicted_fare': str(ride.predicted_fare),
+                'created_at': ride.created_at
+            } for ride in rides
+        ]
+
+        return Response(serialized_rides, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(f"Error fetching ongoing ride: {e}")
+        return Response(
+            {'error': 'An error occurred while fetching ongoing ride'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def get_rides(request):
+    print("Authenticated user:", request.user.customer_id)
+    print("Received booking request")
+    print("Complete request data:", request.data)
+    
+    # Step 1: Get authenticated user's ID
+    customer_id = request.user.customer_id  # Fetch customer_id from the authenticated user
+    print("customer", customer_id)
+
+    # Verify customer exists
+    customer = get_object_or_404(Customer, customer_id=customer_id)
+
+    # Step 2: Fetch rides that are pending or assigned to the driver
+    try:
+        # Filter rides where status is 'pending' or 'accepted' by the current driver
+        rides = Booking.objects.filter(
+            customer=customer, status='completed'
+        )
+
+        # Serialize the rides
+        serialized_rides = [
+            {
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'driver_id': ride.driver.driver_id if ride.driver else None,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                'predicted_fare': str(ride.predicted_fare),
+                'created_at': ride.created_at
+            } for ride in rides
+        ]
+
+        return Response(serialized_rides, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        print(f"Error fetching ride requests: {e}")
+        return Response(
+            {'error': 'An error occurred while fetching ride requests'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
 
 # class BookRideView(APIView):
 #     def post(self, request, *args, **kwargs):

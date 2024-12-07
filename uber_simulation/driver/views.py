@@ -19,6 +19,7 @@ from rides.kafka_producer import send_kafka_message
 from rides.constants import RIDE_ACCEPTED, RIDE_COMPLETED
 from rest_framework.exceptions import NotFound
 from utils.util import getRideRequest
+from datetime import datetime
 
 
 @api_view(['POST'])
@@ -134,10 +135,61 @@ def accept_ride(request, ride_id):
                 {'error': 'An error occurred while accepting the ride'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def pick_rider(request, ride_id):
+        print("Authenticated driver:", request.user.id)
+        print("Received ride acceptance request")
+        print("Complete request data:", request.data)
+        now = datetime.now()
+        # Step 1: Get authenticated driver's ID
+        driver_id = request.user.id  # Fetch driver_id from the authenticated user
+        print("driver", driver_id)
+
+        # Verify driver exists
+        driver = get_object_or_404(Driver, id=driver_id)
+
+        # Step 2: Check if the ride exists and is accepted by driver
+        try:
+            ride = Booking.objects.get(booking_id=ride_id, status='accepted',driver=driver)
+        except Booking.DoesNotExist:
+            return Response(
+                {'error': 'Ride not found or is not accepted by this driver'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        # Step 3: pick rider
+        try:
+            ride.status = 'picked'
+            ride.picked_date = now
+            ride.save()
+            return Response({
+                'message': 'Rider picked successfully',
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'customer_id': ride.customer.customer_id,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                'predicted_fare': str(ride.predicted_fare)
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print(f"Error while accepting the ride: {e}")
+            return Response(
+                {'error': 'An error occurred while accepting the ride'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def complete_ride(request, ride_id):
+        now = datetime.now()
         print("Authenticated driver:", request.user.id)
         print("Received ride acceptance request")
         print("Complete request data:", request.data)
@@ -168,6 +220,7 @@ def complete_ride(request, ride_id):
         # Step 4: Assign the ride to the driver
         try:
             ride.status = 'completed'
+            ride.drop_date = now
             ride.save()
             ride_data = {
                 'ride_id': ride_id,
@@ -281,7 +334,7 @@ def get_ongoing_ride(request):
     try:
         # Filter rides where status is 'pending' or 'accepted' by the current driver
         rides = Booking.objects.filter(
-            driver=driver,status='accepted'
+            driver=driver,status__in=['accepted', 'picked']
         )
 
         # Serialize the rides

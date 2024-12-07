@@ -47,6 +47,7 @@ class Booking(models.Model):
         ('pending', 'pending'),
         ('accepted', 'accepted'),
         ('rejected', 'rejected'),
+        ('picked', 'picked'),
         ('completed', 'completed'),
     ]
 
@@ -68,6 +69,8 @@ class Booking(models.Model):
     num_passengers = models.IntegerField(choices=[(i, str(i)) for i in range(1, 7)], default=1)
     predicted_fare = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=True)
     booking_date = models.DateTimeField(auto_now_add=True)
+    picked_date = models.DateTimeField(null=True)
+    drop_date = models.DateTimeField(null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')  # status field
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     class Meta:
