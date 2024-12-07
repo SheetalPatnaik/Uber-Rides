@@ -9,6 +9,7 @@ import DriverRides from './components/DriverRides';
 import BookRide from './components/BookRide';
 import CustomerLogin from './components/CustomerLogin';
 import CustomerSignupForm from './components/CustomerSignupForm';
+import CustomerRides from './components/CustomerRides';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/customer/login" element={<CustomerLogin />} />
         <Route path="/customer/signup" element={<CustomerSignupForm />} />
         <Route path="/customer/book-ride" element={<BookRide />} />
+        <Route path="/customer/rides" element={<CustomerRides />} />
         <Route path="/driver/login" element={<DriverLoginForm />} />
         <Route path="/driver/signup" element={<DriverSignupForm />} />
         <Route path="/driver/dashboard" element={<DriverDashboard />} />

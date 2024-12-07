@@ -80,7 +80,7 @@ class Command(BaseCommand):
                                         'message': data,
                                     }
                                 ) 
-                    elif data.get("type")==RIDE_COMPLETED:
+                    elif data.get("type") in [RIDE_COMPLETED, PICKED_RIDER]:
                         if data.get("data"):
                             ride_id = data.get("data").get("ride_id")
                             ride = Booking.objects.filter(booking_id=ride_id).first()

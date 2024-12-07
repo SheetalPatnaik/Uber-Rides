@@ -16,10 +16,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from users.models import Booking
 from rides.kafka_producer import send_kafka_message
-from rides.constants import RIDE_ACCEPTED, RIDE_COMPLETED
+from rides.constants import RIDE_ACCEPTED, RIDE_COMPLETED, PICKED_RIDER
 from rest_framework.exceptions import NotFound
 from utils.util import getRideRequest
 from datetime import datetime
+from billing.models import getRandomBillId, BillingInformation
+from haversine import haversine, Unit
 
 
 @api_view(['POST'])
@@ -163,6 +165,24 @@ def pick_rider(request, ride_id):
             ride.status = 'picked'
             ride.picked_date = now
             ride.save()
+            ride_data = {
+                'ride_id': ride_id,
+                "driver_id":driver_id,
+                "driver_name":"{} {}".format(driver.first_name, driver.last_name),
+                'predicted_fare': float(ride.predicted_fare),
+                'pickup_coordinates': {
+                    'lat': float(ride.pickup_latitude),
+                    'lng': float(ride.pickup_longitude)
+                },
+                'dropoff_coordinates': {
+                    'lat': float(ride.dropoff_latitude),
+                    'lng': float(ride.dropoff_longitude)
+                }
+            }
+            send_kafka_message({
+                "type":PICKED_RIDER,
+                "data":ride_data
+            })
             return Response({
                 'message': 'Rider picked successfully',
                 'ride_id': ride.booking_id,
@@ -222,6 +242,24 @@ def complete_ride(request, ride_id):
             ride.status = 'completed'
             ride.drop_date = now
             ride.save()
+            # Coordinates: (latitude, longitude)
+            pickup_point = (ride.pickup_latitude, ride.pickup_longitude) 
+            drop_point = (ride.dropoff_latitude, ride.dropoff_longitude) 
+            billing_id = getRandomBillId()
+            # print(billing_id)
+            bill = BillingInformation(
+                billing_id = billing_id,
+                date = now.date(),
+                pickup_time = ride.picked_date,
+                drop_off_time = now,
+                distance_covered = haversine(pickup_point, drop_point, unit=Unit.MILES),
+                total_amount = ride.predicted_fare,
+                source_location = ride.pickup_location,
+                destination_location = ride.dropoff_location,
+                driver=ride.driver,
+                customer=ride.customer
+            )
+            bill.save()
             ride_data = {
                 'ride_id': ride_id,
                 "driver_id":driver_id,
@@ -280,7 +318,7 @@ def get_ride_requests(request):
     try:
         # Filter rides where status is 'pending' or 'accepted' by the current driver
         drive_ride = Booking.objects.filter(
-            status='accepted',driver=driver).first()
+            status__in=['accepted','picked'],driver=driver).first()
         if drive_ride:
             rides = []
         else:

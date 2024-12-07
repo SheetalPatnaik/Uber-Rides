@@ -81,6 +81,16 @@
     background: #fff3cd;
     color: #856404;
   }
+
+  .ride-status.accepted {
+    background: #cdffd0;
+    color: #048511;
+  }
+
+  .ride-status.picked {
+    background: #cdffd0;
+    color: #048511;
+  }
   
   .ride-card-actions {
     display: flex;
