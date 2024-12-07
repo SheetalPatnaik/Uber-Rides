@@ -16,15 +16,15 @@ const HomePage = () => {
           </Nav.Item>
           <Nav className="me-auto">
             <Nav.Link href="/ride">Ride</Nav.Link>
-            <Nav.Link href="/driver/dashboard">Drive</Nav.Link>
+            <Nav.Link href="/driver/signup">Drive</Nav.Link>
             <Nav.Link href="/business">Business</Nav.Link>
             <Nav.Link href="/uber-eats">Uber Eats</Nav.Link>
             <Nav.Link href="/about">About</Nav.Link>
           </Nav>
           <Nav>
   <NavLink to="/help" className="nav-link">Help</NavLink>
-  <NavLink to="/login" className="nav-link">Log in</NavLink>
-  <NavLink to="/signup" className="nav-link">
+  <NavLink to="/driver/login" className="nav-link">Log in</NavLink>
+  <NavLink to="/driver/signup" className="nav-link">
     <Button variant="light" className="sign-up-btn">Sign up</Button>
   </NavLink>
 </Nav>

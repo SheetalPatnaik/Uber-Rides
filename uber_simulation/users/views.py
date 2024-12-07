@@ -213,6 +213,7 @@ class FilterDriversView(APIView):
 class BookRideView(APIView):
     authentication_classes = [CustomJWTAuthentication]  # Use the custom JWT authentication
     permission_classes = [IsAuthenticated]
+    @csrf_exempt
 
     def post(self, request, *args, **kwargs):
         print("Authenticated user:", request.user.customer_id)

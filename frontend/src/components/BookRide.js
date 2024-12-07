@@ -70,7 +70,7 @@ const BookRide = () => {
     };
     console.log("Booking data:", bookingData);
     try {
-      const response = await axios.post('http://localhost:8000/api/book-ride/', bookingData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/book-ride/', bookingData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',

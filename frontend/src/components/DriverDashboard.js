@@ -17,7 +17,7 @@ const DriverDashboard = () => {
     localStorage.removeItem('driverData');
     
     // Redirect to login page
-    navigate('/login');
+    navigate('/driver/login');
   };
   return (
     <div className="driver-dash">
