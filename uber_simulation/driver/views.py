@@ -210,10 +210,10 @@ def complete_ride(request, ride_id):
 
         # Step 3: Check if the ride exists and is pending
         try:
-            ride = Booking.objects.get(booking_id=ride_id, status='accepted', driver=driver)
+            ride = Booking.objects.get(booking_id=ride_id, status='picked', driver=driver)
         except Booking.DoesNotExist:
             return Response(
-                {'error': 'Ride not found or is not accepted by this driver'},
+                {'error': 'Ride not found or is not picked by this driver'},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -560,7 +560,7 @@ def update_profile(request):
 def get_driver_profile(request):
     driver = request.user
     serializer = DriverSerializer(driver)
-    return Response(serializer.data)
+    return Response(serializer.data, status=200)
 
 @api_view(['POST'])
 def add_review(request, driver_id):

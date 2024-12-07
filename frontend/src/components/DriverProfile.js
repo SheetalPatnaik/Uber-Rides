@@ -25,6 +25,7 @@ const DriverProfile = () => {
 
  const fetchDriverProfile = async () => {
    try {
+    console.log(axios.defaults)
      const response = await axios.get(`http://localhost:8000/api/driver/profile`, {
        headers: {
          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
