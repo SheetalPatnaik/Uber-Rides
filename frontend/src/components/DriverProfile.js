@@ -102,7 +102,7 @@ const DriverProfile = () => {
    e.preventDefault();
    try {
      await axios.put(
-       `http://localhost:8000//api/driver/profile/update`,
+       `http://localhost:8000/api/driver/profile/update`,
        driverData,
        {
          headers: {

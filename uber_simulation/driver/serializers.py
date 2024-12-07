@@ -45,17 +45,18 @@ class DriverSerializer(serializers.ModelSerializer):
         }
 
     def validate_driver_id(self, value):
-        if Driver.objects.filter(driver_id=value).exists():
+        if Driver.objects.exclude(id=self.initial_data.get('id')).filter(driver_id=value).exists():
             raise serializers.ValidationError("Driver ID already exists")
         return value
 
-    def validate_email(self, value):
-        if Driver.objects.filter(email=value).exists():
+    def validate_email(self, value): 
+        print(self.initial_data)
+        if Driver.objects.exclude(id=self.initial_data.get('id')).filter(email=value).exists():
             raise serializers.ValidationError("Email already exists")
         return value
 
     def validate_phone_number(self, value):
-        if Driver.objects.filter(phone_number=value).exists():
+        if Driver.objects.exclude(id=self.initial_data.get('id')).filter(phone_number=value).exists():
             raise serializers.ValidationError("Phone number already exists")
         return value
 

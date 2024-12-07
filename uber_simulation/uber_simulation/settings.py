@@ -79,8 +79,21 @@ AUTHENTICATION_BACKENDS = [
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
+# CORS_ALLOW_HEADERS = ['*']
+# CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization', 'X-CSRFToken', 'Access-Control-Allow-Origin', 'authorization']
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
 
+# Allow all methods
+# CORS_ALLOW_METHODS = [
+#     'DELETE',
+#     'GET',
+#     'OPTIONS',
+#     'PATCH',
+#     'POST',
+#     'PUT',
+# ]
 ROOT_URLCONF = 'uber_simulation.urls'
 
 TEMPLATES = [

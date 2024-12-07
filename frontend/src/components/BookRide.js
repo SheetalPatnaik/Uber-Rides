@@ -83,7 +83,7 @@ const BookRide = () => {
       setIsProceedClicked(true); // Enable the confirm button
     } catch (error) {
       console.error('Error during proceed:', error);
-      alert('Error predicting fare. Please try again.');
+      alert(error.response.data.error);
     }
   };
 
