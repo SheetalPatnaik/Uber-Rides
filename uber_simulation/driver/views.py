@@ -560,7 +560,7 @@ def update_profile(request):
 def get_driver_profile(request):
     driver = request.user
     serializer = DriverSerializer(driver)
-    return Response(serializer.data)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def add_review(request, driver_id):

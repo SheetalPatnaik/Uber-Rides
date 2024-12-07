@@ -1,232 +1,218 @@
+// DriverProfile.js
 import React, { useState, useEffect } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Button, Form, Row, Col } from 'react-bootstrap';
+import SharedNavbar from '../components/SharedNavbar';
+import '../styles/DriverProfile.css';
+
 
 const DriverProfile = () => {
-  const [profileData, setProfileData] = useState({
-    driver_id: '',
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone_number: '',
-    address: '',
-    city: '',
-    state: '',
-    zipcode: '',
-    vehicle_type: '',
-    vehicle_model: '',
-    vehicle_plate: '',
-    license_number: '',
-    rating: '',
-    profile_photo: null,
-    introduction_video: null,
-  });
-  const VEHICLE_TYPES = ['sedan', 'suv', 'luxury', 'van'] 
-  const [previewImage, setPreviewImage] = useState(null);
-  const [message, setMessage] = useState('');
-  const [isEditing, setIsEditing] = useState(false);
+ const [driverData, setDriverData] = useState(null);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState(null);
+ const [previewImage, setPreviewImage] = useState(null);
+ const [isEditing, setIsEditing] = useState(false);
 
-  // Fetch driver profile
-  const fetchProfile = async () => {
-    try {
-      const token = localStorage.getItem('accessToken'); // Assuming token is stored in localStorage
-      const response = await axios.get('http://localhost:8000/api/driver/profile', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      setProfileData(response.data);
-      setPreviewImage(response.data.profile_photo); // Set profile photo preview if available
-    } catch (error) {
-      console.error('Error fetching profile:', error.response?.data || error.message);
-      setMessage('Failed to fetch profile. Please try again.');
-    }
-  };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
+ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-  // Handle input changes
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      setProfileData((prev) => ({
-        ...prev,
-        [name]: files[0],
-      }));
-      if (name === 'profile_photo') {
-        setPreviewImage(URL.createObjectURL(files[0]));
+
+ useEffect(() => {
+   fetchDriverProfile();
+ }, []);
+
+
+ const fetchDriverProfile = async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/driver/profile', {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
       }
-    } else {
-      setProfileData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
-  };
-
-  // Handle form submission
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setMessage('');
-
-    const token = localStorage.getItem('accessToken');
-    const formData = new FormData();
-
-    Object.entries(profileData).forEach(([key, value]) => {
-      if (value) formData.append(key, value);
     });
+    console.log(response);
+    //setCurrentRides(response.data);
+  } catch (err) {
+    //setError('Failed to fetch ride requests');
+    console.error('Error fetching ride requests:', err);
+  }
+   try {
+     console.log(axios.defaults);
+     const response = await axios.get(`http://localhost:8000/api/driver/profile`, {
+       headers: {
+         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+         'Content-Type': 'application/json',
+       }
+     });
+     console.log(response)
+     setDriverData(response.data);
+     if (response.data.profile_photo) {
+       setPreviewImage(response.data.profile_photo);
+     }
+     setLoading(false);
+   } catch (err) {
+     setError('Failed to fetch profile data');
+     setLoading(false);
+   }
+ };
 
-    try {
-      await axios.put('http://localhost:8000/api/driver/profile/update', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      setMessage('Profile updated successfully!');
-      setIsEditing(false);
-      fetchProfile(); // Refresh profile after update
-    } catch (error) {
-      console.error('Error updating profile:', error.response?.data || error.message);
-      setMessage('Failed to update profile. Please try again.');
-    }
-  };
 
-  return (
-    <Container>
-      <h2>Driver Profile</h2>
-      {message && <p>{message}</p>}
-      <Form onSubmit={handleUpdate}>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="driver_id">
-              <Form.Label>Driver ID</Form.Label>
-              <Form.Control
-                type="text"
-                name="driver_id"
-                value={profileData.driver_id}
-                readOnly
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={profileData.email}
-                readOnly={!isEditing}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="first_name">
-              <Form.Label>First Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="first_name"
-                value={profileData.first_name}
-                readOnly={!isEditing}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="last_name">
-              <Form.Label>Last Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="last_name"
-                value={profileData.last_name}
-                readOnly={!isEditing}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="phone_number">
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                type="text"
-                name="phone_number"
-                value={profileData.phone_number}
-                readOnly={!isEditing}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="vehicle_type">
-              <Form.Label>Vehicle Type</Form.Label>
-              <Form.Control
-                as="select"
-                name="vehicle_type"
-                value={profileData.vehicle_type}
-                readOnly={!isEditing}
-                onChange={handleInputChange}
-              >
-                <option value="">Select Vehicle Type</option>
-                {VEHICLE_TYPES.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="address">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
-                name="address"
-                value={profileData.address}
-                readOnly={!isEditing}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="profile_photo">
-              <Form.Label>Profile Photo</Form.Label>
-              <Form.Control
-                type="file"
-                name="profile_photo"
-                accept="image/*"
-                onChange={handleInputChange}
-              />
-              {previewImage && <img src={previewImage} alt="Preview" width="100" />}
-            </Form.Group>
-          </Col>
-        </Row>
-        {isEditing && (
-          <Button type="submit" variant="primary" className="mt-3">
-            Save Changes
-          </Button>
-        )}
-        {!isEditing && (
-          <Button
-            variant="secondary"
-            className="mt-3"
-            onClick={() => setIsEditing(true)}
-          >
-            Edit Profile
-          </Button>
-        )}
-      </Form>
-    </Container>
-  );
+ const handleImageChange = async (e) => {
+   const file = e.target.files[0];
+   if (file) {
+     try {
+       const formData = new FormData();
+       formData.append('profile_photo', file);
+
+
+       const response = await axios.post(
+         `http://localhost:8000/api/driver/profile/update`,
+         formData,
+         {
+           headers: {
+             'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+             'Content-Type': 'multipart/form-data'
+           }
+         }
+       );
+
+
+       setPreviewImage(URL.createObjectURL(file));
+       setDriverData(prev => ({
+         ...prev,
+         profile_photo: response.data.photo_url
+       }));
+     } catch (err) {
+       setError('Failed to upload profile photo');
+     }
+   }
+ };
+
+
+ const handleInputChange = (e) => {
+   const { name, value } = e.target;
+   setDriverData(prev => ({
+     ...prev,
+     [name]: value
+   }));
+ };
+
+
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+   try {
+     await axios.put(
+       `http://localhost:8000//api/driver/profile/update`,
+       driverData,
+       {
+         headers: {
+           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+         }
+       }
+     );
+     setIsEditing(false);
+     fetchDriverProfile(); // Refresh data after update
+   } catch (err) {
+     setError('Failed to update profile');
+   }
+ };
+
+
+ if (loading) {
+   return (
+     <div className="driver-profile-loading">
+       <div className="loading-spinner"></div>
+     </div>
+   );
+ }
+
+
+ if (error) {
+   return (
+     <div className="driver-profile-error">
+       <p>{error}</p>
+       <button onClick={fetchDriverProfile}>Retry</button>
+     </div>
+   );
+ }
+
+
+ return (
+   <div className="driver-profile">
+     {/* <SharedNavbar /> */}
+    
+     <Container className="driver-profile-container">
+       <div className="driver-profile-header">
+         <h1>Profile Information</h1>
+         <button
+           className="driver-profile-edit-btn"
+           onClick={() => setIsEditing(!isEditing)}
+         >
+           {isEditing ? 'Cancel' : 'Edit Profile'}
+         </button>
+       </div>
+
+
+       <form onSubmit={handleSubmit} className="driver-profile-form">
+         <Row>
+           <Col lg={3} md={12} className="driver-profile-photo-section">
+             <div className="driver-profile-photo-wrapper">
+               <img
+                 src={previewImage || '/default-avatar.png'}
+                 alt="Profile"
+                 className="driver-profile-photo"
+               />
+               {isEditing && (
+                 <input
+                   type="file"
+                   accept="image/*"
+                   onChange={handleImageChange}
+                   className="driver-profile-photo-input"
+                 />
+               )}
+             </div>
+           </Col>
+
+
+           <Col lg={9} md={12}>
+             <Row>
+               {/* Form fields with API data */}
+               {Object.entries(driverData || {}).map(([key, value]) => {
+                 if (key !== 'profile_photo' && key !== 'id') {
+                   return (
+                     <Col md={6} key={key}>
+                       <div className="driver-profile-input-group">
+                         <label>{key.split('_').join(' ').toUpperCase()}</label>
+                         <input
+                           type="text"
+                           name={key}
+                           value={value || ''}
+                           onChange={handleInputChange}
+                           disabled={!isEditing}
+                         />
+                       </div>
+                     </Col>
+                   );
+                 }
+                 return null;
+               })}
+             </Row>
+
+
+             {isEditing && (
+               <div className="driver-profile-actions">
+                 <button type="submit" className="driver-profile-save-btn">
+                   Save Changes
+                 </button>
+               </div>
+             )}
+           </Col>
+         </Row>
+       </form>
+     </Container>
+   </div>
+ );
 };
 
-export default DriverProfile;
+
+export default DriverProfile;

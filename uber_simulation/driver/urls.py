@@ -8,10 +8,10 @@ router.register(r'drivers', DriverViewSet, basename='driver')
 
 # Define URL patterns
 urlpatterns = [
+    path('profile', get_driver_profile, name='driver-profile'),
     path('register/', DriverViewSet.as_view({'post': 'create'}), name='driver-register'),
     path('login/', driver_login, name='driver-login'),  # Put login first
     path('profile/update/', update_profile, name='update_profile'),
-    path('profile', get_driver_profile, name='driver-profile'),
     path('<int:driver_id>/reviews/', add_review, name='add_review'),
     path('accept-ride/<int:ride_id>', accept_ride, name='accept-ride'),
     path('pick-rider/<int:ride_id>', pick_rider, name='pick-rider'),
