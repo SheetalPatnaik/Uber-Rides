@@ -249,6 +249,7 @@ def complete_ride(request, ride_id):
             # print(billing_id)
             bill = BillingInformation(
                 billing_id = billing_id,
+                ride=ride,
                 date = now.date(),
                 pickup_time = ride.picked_date,
                 drop_off_time = now,
