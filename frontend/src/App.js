@@ -10,6 +10,8 @@ import BookRide from './components/BookRide';
 import CustomerLogin from './components/CustomerLogin';
 import CustomerSignupForm from './components/CustomerSignupForm';
 import CustomerRides from './components/CustomerRides';
+import CustomerDashboard from './components/CustomerDashboard';
+import CustomerProfile from './components/CustomerProfile';
 
 function App() {
   return (
@@ -18,8 +20,10 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/customer/login" element={<CustomerLogin />} />
         <Route path="/customer/signup" element={<CustomerSignupForm />} />
+        <Route path="/customer/dashboard" element={<CustomerDashboard />} />
         <Route path="/customer/book-ride" element={<BookRide />} />
         <Route path="/customer/rides" element={<CustomerRides />} />
+        <Route path="/customer/profile" element={<CustomerProfile />} />
         <Route path="/driver/login" element={<DriverLoginForm />} />
         <Route path="/driver/signup" element={<DriverSignupForm />} />
         <Route path="/driver/dashboard" element={<DriverDashboard />} />

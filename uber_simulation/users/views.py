@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
+from .serializers import CustomerSerializer
 
 
 # views.py
@@ -469,7 +470,26 @@ def get_rides(request):
             {'error': 'An error occurred while fetching ride requests'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+#Adding this new for update profile
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def get_customer_profile(request):
+    customer = request.user
+    serializer = CustomerSerializer(customer)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def update_customer_profile(request):
+    customer = request.user
+    serializer = CustomerSerializer(customer, data=request.data, partial=True)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # class BookRideView(APIView):
 #     def post(self, request, *args, **kwargs):

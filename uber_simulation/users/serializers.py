@@ -60,3 +60,27 @@ class BookingSerializer(serializers.ModelSerializer):
             predicted_fare=predicted_fare
         )
         return booking
+    
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = [
+            'first_name', 'last_name', 'address', 'city', 'state', 'zip_code', 
+            'phone_number', 'email', 'credit_card'
+        ]
+
+    def validate_email(self, value):
+        """
+        Custom validation for email to ensure it's unique.
+        """
+        if Customer.objects.filter(email=value).exclude(customer_id=self.instance.customer_id).exists():
+            raise serializers.ValidationError("Email is already in use by another customer.")
+        return value
+
+    def validate_phone_number(self, value):
+        """
+        Custom validation for phone number to ensure it's unique.
+        """
+        if Customer.objects.filter(phone_number=value).exclude(customer_id=self.instance.customer_id).exists():
+            raise serializers.ValidationError("Phone number is already in use by another customer.")
+        return value

@@ -1,7 +1,7 @@
 from django.db import models
 from utils.validators import DataValidators
 from driver.models import Driver
-from users.models import Customer
+from users.models import Customer, Booking
 import random
 # Create your models here.
 
@@ -28,6 +28,7 @@ class BillingInformation(models.Model):
         unique=True,
         primary_key=True
     )
+    ride= models.ForeignKey(Booking, on_delete=models.SET_NULL, null=True)
     date = models.DateField()
     pickup_time = models.DateTimeField()
     drop_off_time = models.DateTimeField()

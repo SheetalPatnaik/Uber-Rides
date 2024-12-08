@@ -29,7 +29,7 @@ const CustomerLogin = () => {
       console.log("Access Token:", response.data.access_token);
       console.log("Refresh Token:", response.data.refresh_token);
       console.log("Customer ID:", response.data.customer_id);
-      navigate("/customer/book-ride");
+      navigate("/customer/dashboard");
       // Redirect to the customer dashboard or another page
       
     } catch (error) {
