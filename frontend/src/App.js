@@ -21,6 +21,9 @@ import CustomerDetails from './components/CustomerDetails';
 import BillingManagement from './components/BillingManagement';
 import BillDetails from './components/BillDetails';
 import Statistics from './components/Statistics';
+import CustomerDashboard from './components/CustomerDashboard';
+import CustomerProfile from './components/CustomerProfile';
+import RideDetailPage from './components/RideDetailPage';
 
 function App() {
   return (
@@ -29,8 +32,11 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/customer/login" element={<CustomerLogin />} />
         <Route path="/customer/signup" element={<CustomerSignupForm />} />
+        <Route path="/customer/dashboard" element={<CustomerDashboard />} />
         <Route path="/customer/book-ride" element={<BookRide />} />
         <Route path="/customer/rides" element={<CustomerRides />} />
+        <Route path="/customer/ride-detail/:rideId" element={<RideDetailPage />} />
+        <Route path="/customer/profile" element={<CustomerProfile />} />
         <Route path="/driver/login" element={<DriverLoginForm />} />
         <Route path="/driver/signup" element={<DriverSignupForm />} />
         <Route path="/driver/dashboard" element={<DriverDashboard />} />

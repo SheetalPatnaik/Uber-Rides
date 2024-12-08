@@ -6,7 +6,18 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from datetime import datetime
 from ml_model.predictor import preprocess_and_predict  # New import
+<<<<<<< HEAD
 from rest_framework.decorators import action
+=======
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from .models import BillingInformation
+from rest_framework.permissions import IsAuthenticated
+from users.authentication import CustomJWTAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from users.models import Booking
+
+
+>>>>>>> feature/leon
 
 class BillingViewSet(viewsets.ModelViewSet):
     queryset = BillingInformation.objects.all()
@@ -92,3 +103,31 @@ class BillingViewSet(viewsets.ModelViewSet):
         billing = get_object_or_404(BillingInformation, billing_id=pk)
         serializer = self.serializer_class(billing)
         return Response(serializer.data)
+@api_view(["GET"])
+def getBillInfo(request, ride_id):
+    try:
+        ride = Booking.objects.get(booking_id=ride_id)
+        bill = BillingInformation.objects.get(ride=ride)
+        billInfo = {
+            "billing_id":bill.billing_id,
+            "bill_date":bill.date,
+            "pickup_time":bill.pickup_time.strftime("%I:%M %p"),
+            "drop_off_time":bill.drop_off_time.strftime("%I:%M %p"),
+            "distance_covered":bill.distance_covered,
+            "total_amount":bill.total_amount,
+            "source_location":bill.source_location,
+            "destination_location":bill.destination_location,
+            "driver_id":bill.driver.driver_id,
+            "customer_id":bill.customer.customer_id,
+        }
+        return Response(billInfo, status=status.HTTP_200_OK)
+    except Booking.DoesNotExist:
+        return Response(
+            {'error': 'Ride not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except BillingInformation.DoesNotExist:
+        return Response(
+            {'error': 'Bill not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )

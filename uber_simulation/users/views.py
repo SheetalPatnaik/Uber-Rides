@@ -2,15 +2,20 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Customer
+from .models import Customer, Review
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
 from .serializers import CustomerSerializer
+<<<<<<< HEAD
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import models
+=======
+from driver.models import Driver
+from django.db.models import Avg
+>>>>>>> feature/leon
 
 
 # views.py
@@ -443,6 +448,8 @@ def get_rides(request):
                 'ride_id': ride.booking_id,
                 'status': ride.status,
                 'driver_id': ride.driver.driver_id if ride.driver else None,
+                'pickup_location': ride.pickup_location,
+                'dropoff_location': ride.dropoff_location,
                 'pickup_coordinates': {
                     'lat': ride.pickup_latitude,
                     'lng': ride.pickup_longitude
@@ -452,7 +459,8 @@ def get_rides(request):
                     'lng': ride.dropoff_longitude
                 },
                 'predicted_fare': str(ride.predicted_fare),
-                'created_at': ride.created_at
+                'created_at': ride.created_at,
+                'is_reviewed': ride.is_reviewed
             } for ride in rides
         ]
 
@@ -478,6 +486,103 @@ def delete_customer(request, customer_id):
         return JsonResponse({'message': 'Customer deleted successfully'}, status=204)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+#Adding this new for update profile
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def get_customer_profile(request):
+    customer = request.user
+    serializer = CustomerSerializer(customer)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def update_customer_profile(request):
+    customer = request.user
+    serializer = CustomerSerializer(customer, data=request.data, partial=True)
+    
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def add_review(request, ride_id):
+    customer = request.user
+    data=request.data
+    if data.get('rating') is not None and data.get('content'):
+        try:
+            ride = Booking.objects.get(booking_id=ride_id)
+            if ride.customer != customer:
+                return Response({'error': 'You are not authorized to add a review for this ride'}, status=status.HTTP_403_FORBIDDEN)
+            if ride.status != 'completed':
+                return Response({'error': 'You can only add a review after the ride is completed'}, status=status.HTTP_400_BAD_REQUEST)
+            rating = data.get('rating')
+            content = data.get('content')
+            driver = ride.driver
+            review = Review.objects.filter(passenger=customer, driver=driver, booking=ride).first()
+            if review:
+                return Response({'error': 'You have already added a review for this ride'}, status=status.HTTP_400_BAD_REQUEST)
+            review = Review.objects.create(passenger=customer, driver=driver, rating=rating, content=content)
+            review.save()
+            # Calculate the average rating for the driver
+            average_rating = Review.objects.filter(driver=driver).aggregate(Avg('rating'))['rating__avg']
+            driver.rating = average_rating
+            driver.save()
+            return Response({'message': 'Review added successfully'}, status=status.HTTP_201_CREATED)
+        except Booking.DoesNotExist:
+            return Response({'error': 'Ride not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+    else:
+        return Response({'error': 'Invalid data'}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CustomJWTAuthentication])
+def get_ride_detail(request, ride_id):
+    customer = request.user
+    try:
+        # Get the booking (ride) by the booking ID
+        ride = Booking.objects.get(booking_id=ride_id, customer=customer)
+        
+        # Check if a review already exists for this booking
+        review = Review.objects.filter(booking=ride).first()
+
+        review_data = None
+        if review:
+            review_data = {
+                'rating': review.rating,
+                'content': review.content,
+            }
+        ride_details={
+                'ride_id': ride.booking_id,
+                'status': ride.status,
+                'driver_id': ride.driver.driver_id if ride.driver else None,
+                'pickup_location': ride.pickup_location,
+                'dropoff_location': ride.dropoff_location,
+                'pickup_coordinates': {
+                    'lat': ride.pickup_latitude,
+                    'lng': ride.pickup_longitude
+                },
+                'dropoff_coordinates': {
+                    'lat': ride.dropoff_latitude,
+                    'lng': ride.dropoff_longitude
+                },
+                "pickup_time":ride.picked_date.strftime("%I:%M %p") if ride.picked_date else None,
+                "drop_off_time":ride.drop_date.strftime("%I:%M %p") if ride.drop_date else None,
+                'predicted_fare': str(ride.predicted_fare),
+                'created_at': ride.created_at,
+                'is_reviewed': ride.is_reviewed
+            }
+        return Response({
+            'ride_details': ride_details,
+            'review': review_data,  # If a review exists, include it
+        })
+    except Booking.DoesNotExist:
+        return Response({'error': 'Ride not found'}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def get_customer_details(request, customer_id):

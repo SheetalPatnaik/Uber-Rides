@@ -52,7 +52,7 @@ const HomePage = () => {
             <NavLink to="/signup">
                 <Button variant="dark" size="lg">Get started</Button>
               </NavLink>
-              <NavLink to="/login" className="text-decoration-none">
+              <NavLink to="/driver/login" className="text-decoration-none">
                 <Button variant="link" className="text-dark">
                   Already have an account? Sign in
                 </Button>

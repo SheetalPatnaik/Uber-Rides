@@ -249,6 +249,7 @@ def complete_ride(request, ride_id):
             # print(billing_id)
             bill = BillingInformation(
                 billing_id = billing_id,
+                ride=ride,
                 date = now.date(),
                 pickup_time = ride.picked_date,
                 drop_off_time = now,
@@ -260,6 +261,9 @@ def complete_ride(request, ride_id):
                 customer=ride.customer
             )
             bill.save()
+            total_trips=Booking.objects.filter(driver=driver,status='completed').count()
+            driver.total_trips = total_trips
+            driver.save()
             ride_data = {
                 'ride_id': ride_id,
                 "driver_id":driver_id,
@@ -341,6 +345,8 @@ def get_ride_requests(request):
                     'lat': ride.dropoff_latitude,
                     'lng': ride.dropoff_longitude
                 },
+                'pickup_location': ride.pickup_location,
+                'dropoff_location': ride.dropoff_location,
                 'predicted_fare': str(ride.predicted_fare),
                 'created_at': ride.created_at
             } for ride in rides
@@ -389,6 +395,8 @@ def get_ongoing_ride(request):
                     'lat': ride.dropoff_latitude,
                     'lng': ride.dropoff_longitude
                 },
+                'pickup_location': ride.pickup_location,
+                'dropoff_location': ride.dropoff_location,
                 'predicted_fare': str(ride.predicted_fare),
                 'created_at': ride.created_at
             } for ride in rides
@@ -437,6 +445,8 @@ def get_rides(request):
                     'lat': ride.dropoff_latitude,
                     'lng': ride.dropoff_longitude
                 },
+                'pickup_location': ride.pickup_location,
+                'dropoff_location': ride.dropoff_location,
                 'predicted_fare': str(ride.predicted_fare),
                 'created_at': ride.created_at
             } for ride in rides

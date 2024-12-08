@@ -5,6 +5,8 @@ from .views import *
 urlpatterns = [
     path('register-customer/', views.register_customer, name='register_customer'),
     path('login/', views.login_customer, name='login_customer'),
+    path('profile', views.get_customer_profile, name='get_customer_profile'),
+    path('profile/update', views.update_customer_profile, name='update_customer_profile'),
     path('create-ride/', BookRideView.as_view(), name='create-ride'),
     path('filter-driver/', FilterDriversView.as_view(), name='filter-driver'),
     path('ongoing-ride/', get_ongoing_ride, name='ongoing-ride'),
@@ -13,4 +15,6 @@ urlpatterns = [
     path('delete-user/<str:customer_id>/', delete_customer, name='delete_customer'),
     path('customers/<str:customer_id>/', get_customer_details, name='get_customer_details'),
     path('customers/<str:customer_id>/rides/', get_customer_rides, name='get_customer_rides'),
+    path('ride/<int:ride_id>/detail/', get_ride_detail, name='get_ride_detail'),
+    path('add-review/<int:ride_id>/', add_review, name='add_review'),
 ]
