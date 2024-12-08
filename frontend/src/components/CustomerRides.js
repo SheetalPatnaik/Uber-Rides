@@ -72,8 +72,8 @@ const CustomerRides = () => {
                       </div>
                       <div className="ride-card-body">
                         <p><strong>Driver ID:</strong> {ride.driver_id}</p>
-                        <p><strong>Pickup Location:</strong> ({ride.pickup_coordinates.lat}, {ride.pickup_coordinates.lng})</p>
-                        <p><strong>Dropoff Location:</strong> ({ride.dropoff_coordinates.lat}, {ride.dropoff_coordinates.lng})</p>
+                        <p><strong>Pickup Location:</strong>{ride.pickup_location} </p>
+                        <p><strong>Dropoff Location:</strong>{ride.dropoff_location}</p>
                         <p><strong>Predicted Fare:</strong> ${ride.predicted_fare}</p>
                         <p><strong>Created:</strong> {new Date(ride.created_at).toLocaleString()}</p>
                       </div>
@@ -98,6 +98,7 @@ const CustomerRides = () => {
                   <th>Dropoff</th>
                   <th>Fare</th>
                   <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -106,13 +107,18 @@ const CustomerRides = () => {
                     <td>{ride.ride_id}</td>
                     <td>{new Date(ride.created_at).toLocaleString()}</td>
                     <td>{ride.driver_id}</td>
-                    <td>({ride.pickup_coordinates.lat}, {ride.pickup_coordinates.lng})</td>
-                    <td>({ride.dropoff_coordinates.lat}, {ride.dropoff_coordinates.lng})</td>
+                    <td><p>{ride.pickup_location} </p></td>
+                    <td><p>{ride.dropoff_location}</p></td>
                     <td>${ride.predicted_fare}</td>
                     <td>
                       <span className={`status-badge ${ride.status.toLowerCase()}`}>
                         {ride.status}
                       </span>
+                    </td>
+                    <td>
+                    <NavLink to={`/customer/ride-detail/${ride.ride_id}`} className="customer-dash-link">
+                          Details
+                    </NavLink>
                     </td>
                   </tr>
                 ))}

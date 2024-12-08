@@ -12,6 +12,7 @@ import CustomerSignupForm from './components/CustomerSignupForm';
 import CustomerRides from './components/CustomerRides';
 import CustomerDashboard from './components/CustomerDashboard';
 import CustomerProfile from './components/CustomerProfile';
+import RideDetailPage from './components/RideDetailPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/customer/dashboard" element={<CustomerDashboard />} />
         <Route path="/customer/book-ride" element={<BookRide />} />
         <Route path="/customer/rides" element={<CustomerRides />} />
+        <Route path="/customer/ride-detail/:rideId" element={<RideDetailPage />} />
         <Route path="/customer/profile" element={<CustomerProfile />} />
         <Route path="/driver/login" element={<DriverLoginForm />} />
         <Route path="/driver/signup" element={<DriverSignupForm />} />

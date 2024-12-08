@@ -5,6 +5,7 @@ from django.core.cache import cache
 import googlemaps
 from utils.validators import DataValidators
 
+
 class Driver(AbstractUser):
     # Cache keys
     DRIVER_CACHE_KEY = 'driver_{}'
@@ -110,20 +111,3 @@ class Driver(AbstractUser):
                 name='unique_driver_phone'
             ),
         ]
-
-class Review(models.Model):
-    REVIEW_CACHE_KEY = 'review_{}'
-    
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='reviews')
-    passenger = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def save(self, *args, **kwargs):
-        # Clear cache on save
-        cache.delete(self.REVIEW_CACHE_KEY.format(self.id))
-        cache.delete(Driver.DRIVER_CACHE_KEY.format(self.driver_id))
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Review for {self.driver.get_full_name()} by {self.passenger.get_full_name()}"

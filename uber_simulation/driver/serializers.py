@@ -22,7 +22,8 @@
 #         driver.save()
 #         return driver              
 from rest_framework import serializers
-from .models import Driver, Review
+from .models import Driver
+from users.models import Review
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

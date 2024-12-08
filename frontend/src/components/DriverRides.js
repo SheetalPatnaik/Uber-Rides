@@ -60,6 +60,11 @@ const DriverRides = () => {
     }
   };
 
+  // Function to calculate the cumulative earnings from previous rides
+  const calculateTotalEarnings = (rides) => {
+    return rides.reduce((total, ride) => total + (ride.predicted_fare * 0.80), 0).toFixed(2);
+  };
+
   const handleRideAction = async (rideId, action) => {
     var url = action === 'accept'?`http://localhost:8000/api/driver/accept-ride/${rideId}`:(
       action=='pick'?`http://localhost:8000/api/driver/pick-rider/${rideId}`:(
@@ -109,8 +114,8 @@ const DriverRides = () => {
                       </div>
                       <div className="ride-card-body">
                         <p><strong>Customer ID:</strong> {ride.customer_id}</p>
-                        <p><strong>Pickup Location:</strong> ({ride.pickup_coordinates.lat}, {ride.pickup_coordinates.lng})</p>
-                        <p><strong>Dropoff Location:</strong> ({ride.dropoff_coordinates.lat}, {ride.dropoff_coordinates.lng})</p>
+                        <p><strong>Pickup Location:</strong>{ride.pickup_location} </p>
+                        <p><strong>Dropoff Location:</strong>{ride.dropoff_location}</p>
                         <p><strong>Predicted Fare:</strong> ${ride.predicted_fare}</p>
                         <p><strong>Created:</strong> {new Date(ride.created_at).toLocaleString()}</p>
                       </div>
@@ -148,8 +153,8 @@ const DriverRides = () => {
                       </div>
                       <div className="ride-card-body">
                         <p><strong>Customer ID:</strong> {ride.customer_id}</p>
-                        <p><strong>Pickup Location:</strong> ({ride.pickup_coordinates.lat}, {ride.pickup_coordinates.lng})</p>
-                        <p><strong>Dropoff Location:</strong> ({ride.dropoff_coordinates.lat}, {ride.dropoff_coordinates.lng})</p>
+                        <p><strong>Pickup Location:</strong>{ride.pickup_location} </p>
+                        <p><strong>Dropoff Location:</strong>{ride.dropoff_location}</p>
                         <p><strong>Predicted Fare:</strong> ${ride.predicted_fare}</p>
                         <p><strong>Created:</strong> {new Date(ride.created_at).toLocaleString()}</p>
                       </div>
@@ -181,6 +186,10 @@ const DriverRides = () => {
         <section className="driver-rides-history">
           <h2>My Rides</h2>
           <div className="rides-table-wrapper">
+            {/* Display Total Earnings */}
+            <div className="total-earnings">
+              <h4>Total Earnings: ${calculateTotalEarnings(previousRides)}</h4>
+            </div>
             <table className="rides-table">
               <thead>
                 <tr>
@@ -199,8 +208,8 @@ const DriverRides = () => {
                     <td>{ride.ride_id}</td>
                     <td>{new Date(ride.created_at).toLocaleString()}</td>
                     <td>{ride.customer_id}</td>
-                    <td>({ride.pickup_coordinates.lat}, {ride.pickup_coordinates.lng})</td>
-                    <td>({ride.dropoff_coordinates.lat}, {ride.dropoff_coordinates.lng})</td>
+                    <td><p>{ride.pickup_location} </p></td>
+                    <td><p>{ride.dropoff_location}</p></td>
                     <td>${ride.predicted_fare}</td>
                     <td>
                       <span className={`status-badge ${ride.status.toLowerCase()}`}>

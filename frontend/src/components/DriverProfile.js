@@ -259,7 +259,7 @@ const DriverProfile = () => {
         const formData = new FormData();
         formData.append('profile_photo', file);
 
-        const response = await axios.post(
+        const response = await axios.put(
           `http://localhost:8000/api/driver/profile/update`,
           formData,
           {
@@ -369,8 +369,11 @@ const DriverProfile = () => {
                   if (
                     key !== 'profile_photo' &&
                     key !== 'id' &&
+                    key !== 'reviews' &&
                     key !== 'is_superuser' &&
-                    key !== 'is_staff'
+                    key !== 'is_staff' &&
+                    key !== 'groups' &&
+                    key !== 'user_permissions'
                   ) {
                     return (
                       <Col md={6} key={key}>
@@ -381,7 +384,7 @@ const DriverProfile = () => {
                             name={key}
                             value={value || ''}
                             onChange={handleInputChange}
-                            disabled={!isEditing}
+                            disabled={!isEditing || key =='rating' || key =='total_trips'} 
                           />
                         </div>
                       </Col>

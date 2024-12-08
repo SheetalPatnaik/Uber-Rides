@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from driver.models import Driver
 import random
+from django.core.cache import cache
 
 def getRandomId():
     random_number1 = random.randint(1000, 9999)
@@ -73,8 +74,28 @@ class Booking(models.Model):
     drop_date = models.DateTimeField(null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')  # status field
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+    is_reviewed = models.BooleanField(default=False, null=True)
     class Meta:
         db_table = 'users_booking'
 
     def __str__(self):
         return f"Booking {self.booking_id} by {self.customer.customer_id}"
+
+class Review(models.Model):
+    REVIEW_CACHE_KEY = 'review_{}'
+    
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE, related_name='reviews')
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='reviews', null=True)
+    passenger = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(0, 5)])
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Clear cache on save
+        cache.delete(self.REVIEW_CACHE_KEY.format(self.id))
+        cache.delete(Driver.DRIVER_CACHE_KEY.format(self.driver_id))
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Review for {self.driver.get_full_name()} by {self.passenger.get_full_name()}"

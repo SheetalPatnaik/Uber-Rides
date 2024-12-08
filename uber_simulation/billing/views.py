@@ -102,8 +102,8 @@ def getBillInfo(request, ride_id):
         billInfo = {
             "billing_id":bill.billing_id,
             "bill_date":bill.date,
-            "pickup_time":bill.pickup_time,
-            "drop_off_time":bill.drop_off_time,
+            "pickup_time":bill.pickup_time.strftime("%I:%M %p"),
+            "drop_off_time":bill.drop_off_time.strftime("%I:%M %p"),
             "distance_covered":bill.distance_covered,
             "total_amount":bill.total_amount,
             "source_location":bill.source_location,
