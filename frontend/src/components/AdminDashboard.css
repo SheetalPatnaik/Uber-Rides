@@ -1,0 +1,77 @@
+.admin-dashboard {
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.dashboard-buttons {
+    margin-top: 2rem;
+}
+
+.dashboard-button {
+    padding: 1rem;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+}
+
+.dashboard-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.general-info {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.general-info p {
+    margin-bottom: 0;
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-button {
+        margin-bottom: 1rem;
+    }
+    
+    .admin-dashboard {
+        padding: 10px;
+    }
+}
+
+.dashboard-card {
+    background-color: #40E0D0;  /* Bright turquoise color */
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.dashboard-card:hover {
+    background-color: #3BC7B9;  /* Slightly darker on hover */
+    transform: translateY(-2px);
+}
+
+.dashboard-link {
+    text-decoration: none;
+    display: block;
+    height: 100%;
+}
+
+.dashboard-title {
+    color: #333;
+}

@@ -22,7 +22,7 @@ from utils.util import getRideRequest
 from datetime import datetime
 from billing.models import getRandomBillId, BillingInformation
 from haversine import haversine, Unit
-
+from django.http import JsonResponse
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -484,7 +484,7 @@ class DriverViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAuthenticated]
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = DriverFilter
-    lookup_field = 'user_id'
+    lookup_field = 'driver_id'
     def get_object(self):
         pk = self.kwargs.get('pk')
         
@@ -610,3 +610,13 @@ def add_review(request, driver_id):
         serializer.save(driver=driver, passenger=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE'])
+def delete_driver(request, driver_id):
+    try:
+        driver = get_object_or_404(Driver, driver_id=driver_id)
+        driver.delete()
+        return JsonResponse({'message': 'Driver deleted successfully'}, status=204)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

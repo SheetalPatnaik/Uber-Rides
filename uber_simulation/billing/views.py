@@ -6,6 +6,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from datetime import datetime
 from ml_model.predictor import preprocess_and_predict  # New import
+from rest_framework.decorators import action
 
 class BillingViewSet(viewsets.ModelViewSet):
     queryset = BillingInformation.objects.all()
@@ -84,4 +85,10 @@ class BillingViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(billing_id=params['billing_id'])
             
         serializer = self.serializer_class(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['get'])
+    def retrieve(self, request, pk=None):
+        billing = get_object_or_404(BillingInformation, billing_id=pk)
+        serializer = self.serializer_class(billing)
         return Response(serializer.data)

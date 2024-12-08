@@ -1,0 +1,48 @@
+.billing-header {
+    margin-bottom: 30px;
+}
+
+.search-form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    background-color: #40E0D0 !important;
+    border-color: #40E0D0 !important;
+    color: black !important;
+}
+
+.btn-primary:hover {
+    background-color: #3BC7B9 !important;
+    border-color: #3BC7B9 !important;
+}
+
+.btn-info {
+    background-color: #40E0D0 !important;
+    border-color: #40E0D0 !important;
+    color: black !important;
+}
+
+.btn-info:hover {
+    background-color: #3BC7B9 !important;
+    border-color: #3BC7B9 !important;
+}
+
+.amount-cell {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.table {
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}

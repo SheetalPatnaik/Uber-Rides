@@ -9,4 +9,8 @@ urlpatterns = [
     path('filter-driver/', FilterDriversView.as_view(), name='filter-driver'),
     path('ongoing-ride/', get_ongoing_ride, name='ongoing-ride'),
     path('rides/', get_rides, name='rides'),
+    path('users/', list_customers, name='list_customers'),
+    path('delete-user/<str:customer_id>/', delete_customer, name='delete_customer'),
+    path('customers/<str:customer_id>/', get_customer_details, name='get_customer_details'),
+    path('customers/<str:customer_id>/rides/', get_customer_rides, name='get_customer_rides'),
 ]

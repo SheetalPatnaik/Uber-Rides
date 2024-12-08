@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Booking, Customer  # Add Customer import here
+from .models import Booking, Customer  
+# Add Customer import here
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
 
 class BookingSerializer(serializers.ModelSerializer):
     pickupLocation = serializers.CharField(source='pickup_location')

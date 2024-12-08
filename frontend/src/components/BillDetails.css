@@ -1,0 +1,39 @@
+.bill-details-container {
+    padding: 20px 0;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.card-header {
+    background-color: #40E0D0 !important;
+    color: black !important;
+    border: none;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-body p {
+    margin-bottom: 10px;
+}
+
+.text-success {
+    font-weight: bold;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.text-muted {
+    word-break: break-word;
+}

@@ -7,6 +7,10 @@ from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import check_password
 from rest_framework.decorators import permission_classes, api_view, authentication_classes
+from .serializers import CustomerSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db import models
 
 
 # views.py
@@ -74,44 +78,35 @@ def login_customer(request):
         try:
             data = json.loads(request.body)
             
-            # Extract the customer ID (SSN) and password from the request data
-            customer_id = data.get('customer_id')
+            # Get either customer_id or email from request
+            identifier = data.get('customer_id')  # This could be either SSN or email
             password = data.get('password')
             
-            if not customer_id or not password:
-                return JsonResponse({'error': 'Customer ID and password are required'}, status=400)
+            if not identifier or not password:
+                return JsonResponse({'error': 'Customer ID/Email and password are required'}, status=400)
             
-            print("step1")
-
-            # Check if the customer exists with the given SSN
-            customer = Customer.objects.filter(customer_id=customer_id).first()
+            # Try to find customer by either SSN or email
+            customer = Customer.objects.filter(
+                models.Q(customer_id=identifier) | models.Q(email=identifier)
+            ).first()
+            
             if not customer:
-                return JsonResponse({'error': 'Customer with this SSN does not exist'}, status=400)
+                return JsonResponse({'error': 'Customer does not exist'}, status=400)
             
-            print("step2")
-            
-            # Check if the password matches the hashed password stored in the database
+            # Check password
             if not check_password(password, customer.password):
                 return JsonResponse({'error': 'Incorrect password'}, status=400)
             
-            print("step3")
-            
-            print(data)
-            # Generate custom JWT tokens (access and refresh) without using for_user
+            # Generate tokens
             refresh = RefreshToken()
-            refresh['customer_id'] = customer.customer_id  # Custom claim
-            print("Access Token:", str(refresh.access_token))
-            print("Refresh Token:", str(refresh))
+            refresh['customer_id'] = customer.customer_id
 
-            print("step4")
-            
             return JsonResponse({
                 'message': 'Login successful',
                 'access_token': str(refresh.access_token),
                 'refresh_token': str(refresh),
                 'customer_id': customer.customer_id, 
             }, status=200)
-            
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -469,89 +464,45 @@ def get_rides(request):
             {'error': 'An error occurred while fetching ride requests'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+@api_view(['GET'])
+def list_customers(request):
+    customers = Customer.objects.all()
+    serializer = CustomerSerializer(customers, many=True)
+    return Response(serializer.data)
 
+@api_view(['DELETE'])
+def delete_customer(request, customer_id):
+    try:
+        customer = get_object_or_404(Customer, customer_id=customer_id)
+        customer.delete()
+        return JsonResponse({'message': 'Customer deleted successfully'}, status=204)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
-# class BookRideView(APIView):
-#     def post(self, request, *args, **kwargs):
-#         print("Received booking request")
-#         print("Complete request data:", request.data)
-        
-#         # Step 1: Get customer_id from request data
-#         customer_id = request.data.get('customerId')
-#         print("customer",customer_id)
-#         if not customer_id:
-#             return Response({
-#                 "error": "Please login to book a ride"
-#             }, status=status.HTTP_401_UNAUTHORIZED)
+@api_view(['GET'])
+def get_customer_details(request, customer_id):
+    try:
+        customer = get_object_or_404(Customer, customer_id=customer_id)
+        serializer = CustomerSerializer(customer)
+        return Response(serializer.data)
+    except Customer.DoesNotExist:
+        return Response(
+            {'error': 'Customer not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
-#         # Step 2: Verify customer exists
-#         customer = get_object_or_404(Customer, customer_id=customer_id)
-       
-#         # Step 3: Validate the booking request data
-#         serializer = BookingSerializer(data=request.data)
-#         if serializer.is_valid():
-#             try:
-#                 # Step 4: Process data and make a prediction
-               
-#                 # Extract current datetime for booking
-#                 current_datetime = datetime.now()
-
-#                 # Extract hour, weekday, date, month, and year from current datetime
-#                 hour = current_datetime.hour
-#                 weekday = current_datetime.weekday()  # Monday = 0, Sunday = 6
-#                 date = current_datetime.day
-#                 month = current_datetime.month
-#                 year = current_datetime.year
-
-#                 input_data = {
-#                     "pickup_latitude": request.data.get("pickupCoordinates").get("lat"),
-#                     "pickup_longitude": request.data.get("pickupCoordinates").get("lng"),
-#                     "dropoff_latitude": request.data.get("dropoffCoordinates").get("lat"),
-#                     "dropoff_longitude": request.data.get("dropoffCoordinates").get("lng"),
-#                     "hour": hour,
-#                     "weekday": weekday,
-#                     "date": date,
-#                     "month": month,
-#                     "year": year,
-#                     "passenger_count": request.data.get("numPassengers"),
-#                     "customer_id": customer_id
-#                 }
-
-#                 print("before preprocess data", input_data)
-#                 # Make the prediction
-#                 predicted_fare = preprocess_and_predict(input_data)
-
-#                 # Convert np.float32 to Decimal
-#                 predicted_fare_decimal = Decimal(float(predicted_fare))
-
-#                 # Round to two decimal places
-#                 predicted_fare_decimal = predicted_fare_decimal.quantize(Decimal('0.01'), rounding=ROUND_DOWN)
-
-#                 print("predictor.py ran")
-#                 print(f"Predicted Fare (Decimal): {predicted_fare_decimal}")
-
-#                 # Add predicted fare to the request data
-#                 request.data['predictedFare'] = predicted_fare_decimal
-
-#                 print("Request data with predicted fare:", request.data)
-
-#                 print(f"Saving booking with predicted fare: {predicted_fare_decimal}")
-#                 # Save the booking instance with the predicted fare
-#                 booking = serializer.save(customer=customer,predicted_fare=predicted_fare_decimal, status='pending')
-                
-#                 print("passing data",request.data)
-#                 return Response({
-#                     'message': 'Booking successful',
-#                     'booking_id': booking.booking_id,
-#                     'predicted_fare': str(predicted_fare_decimal),
-#                     'status': booking.status
-#                 }, status=status.HTTP_201_CREATED)
-
-#             except Exception as e:
-#                 print(f"Error during booking or prediction: {e}")
-#                 return Response({
-#                     'error': 'An error occurred while processing the booking'
-#                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-#         # If serializer is invalid, return errors
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_customer_rides(request, customer_id):
+    try:
+        customer = get_object_or_404(Customer, customer_id=customer_id)
+        rides = Booking.objects.filter(customer=customer)
+        serializer = BookingSerializer(rides, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    "administrator",
+    "corsheaders",
     "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,10 +51,8 @@ INSTALLED_APPS = [
     'users',
     'billing',
     'rides',
-    'administrator',
     'django_redis',
     'rest_framework_simplejwt',
-    'corsheaders',
     'django_filters',
     'django_extensions',
     'drf_yasg',
@@ -81,9 +81,9 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 # CORS_ALLOW_HEADERS = ['*']
 # CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization', 'X-CSRFToken', 'Access-Control-Allow-Origin', 'authorization']
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3001",
+]
 
 # Allow all methods
 # CORS_ALLOW_METHODS = [
@@ -129,25 +129,26 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'uber_db',
-        'USER': 'root',
-        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'uber_db',
+#         'USER': 'root',
+#         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
+#         }
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -168,6 +169,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'driver.Driver'
+AUTH_USER_MODEL = 'administrator.Administrator'
+AUTHENTICATION_BACKENDS = [
+    'administrator.authentication.AdministratorBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 from datetime import timedelta
 
@@ -193,6 +199,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+STATIC_URL = "static/"
 
 
 # Static files (CSS, JavaScript, Images)
@@ -226,3 +233,14 @@ KAFKA_TOPIC = os.getenv("KAFKA_TOPIC","uber")
 
 # print(KAFKA_BOKER, KAFKA_TOPIC)
 print(KAFKA_BOKER, KAFKA_TOPIC)
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

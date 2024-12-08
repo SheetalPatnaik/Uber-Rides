@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
+from . import views
 
 # Create a router for viewset
 router = DefaultRouter()
@@ -20,4 +21,5 @@ urlpatterns = [
     path('ongoing-ride/', get_ongoing_ride, name='ongoing-ride'),
     path('rides/', get_rides, name='rides'),
     path('', include(router.urls)),
+    path('delete-driver/<str:driver_id>/', delete_driver, name='delete_driver'),
 ]
