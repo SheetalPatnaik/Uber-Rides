@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Table } from 'react-bootstrap';
+import CustomerNavbar from './CustomerNavbar';
 
 const BillDetails = () => {
   const { rideId } = useParams(); // Get rideId from URL
@@ -32,6 +33,8 @@ const BillDetails = () => {
   }
 
   return (
+    <div className="bd-wrapper">
+      <CustomerNavbar />
     <Container>
       <h2>Bill Details</h2>
       <Table striped bordered>
@@ -79,6 +82,7 @@ const BillDetails = () => {
         </tbody>
       </Table>
     </Container>
+    </div>
   );
 };
 

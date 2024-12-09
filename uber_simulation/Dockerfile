@@ -1,24 +1,32 @@
-# Use the official Python image
-FROM python:3.9-slim
+FROM python:3.9.1
+ENV PYTHONUNBUFFERED 1
+RUN mkdir /code
 
-# Set the working directory in the container
-WORKDIR /app
+RUN apt-get clean && \
+    apt-get update && \
+    apt-get install -y locales cron
 
-# Copy the requirements file to the container
-COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN locale-gen en_IN
+ENV LANG en_IN
+ENV LANGUAGE en_IN:en
+ENV LC_ALL en_IN
 
-# Copy the entire Django project to the container
+WORKDIR /code
+ADD requirements.txt /code/
+# ADD docker-entrypoint.sh /code/
+RUN /usr/local/bin/python -m pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+ADD ubereats /code/
+
+# RUN chmod +x /code/docker-entrypoint.sh
+
+## Copy source code
 COPY . .
 
-# Set environment variables for Django
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# Expose the port for the Django application
 EXPOSE 8000
 
-# Run Django's development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+# CMD ["sh", "-c", "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"]
+
+

@@ -22,6 +22,7 @@ from utils.util import getRideRequest
 from datetime import datetime
 from billing.models import getRandomBillId, BillingInformation
 from haversine import haversine, Unit
+from django.views.decorators.csrf import csrf_exempt
 
 
 @api_view(['POST'])
@@ -620,3 +621,14 @@ def add_review(request, driver_id):
         serializer.save(driver=driver, passenger=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Delete Driver view for admin
+@api_view(['DELETE'])
+@csrf_exempt
+def delete_driver(request, driver_id):
+   try:
+       driver = Driver.objects.get(driver_id=driver_id)
+       driver.delete()
+       return Response({"message": "Driver deleted successfully"}, status=status.HTTP_200_OK)
+   except Driver.DoesNotExist:
+       return Response({"error": "Driver not found"}, status=status.HTTP_404_NOT_FOUND)

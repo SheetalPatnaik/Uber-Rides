@@ -18,18 +18,17 @@ const BillingManagement = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchAllBills();
+        fetchBills({});
     }, []);
 
-    const fetchAllBills = async () => {
+    const fetchBills = async (params) => {
         try {
             setLoading(true);
             const response = await axios.get('http://localhost:8000/api/billing/search/', {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                }
+                params: params
             });
-            setBills(response.data);
+            console.log(response.data);
+            setBills(response.data); // Assuming the response has a 'bills' array
             setError(null);
         } catch (error) {
             setError('Failed to fetch bills');
@@ -43,23 +42,28 @@ const BillingManagement = () => {
         e.preventDefault();
         try {
             setLoading(true);
+            // Filter out empty values from search criteria
             const params = Object.fromEntries(
                 Object.entries(searchCriteria).filter(([_, value]) => value !== '')
             );
             
-            const response = await axios.get('http://localhost:8000/api/billing/search/', {
-                params,
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-                }
-            });
-            setBills(response.data);
-            setError(null);
+            fetchBills(params);
         } catch (error) {
-            setError('Failed to fetch bills');
+            setError('Failed to search bills');
             console.error('Error:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleViewDetails = async (rideId) => {
+        try {
+            const response = await axios.get(`http://localhost:8000/api/billing/bills/${rideId}/`);
+            // Navigate to bill details page with the data
+            navigate(`/admin/bills/${rideId}`, { state: { billData: response.data } });
+        } catch (error) {
+            console.error('Error fetching bill details:', error);
+            setError('Failed to fetch bill details');
         }
     };
 
@@ -71,7 +75,7 @@ const BillingManagement = () => {
             driver_id: '',
             customer_id: ''
         });
-        fetchAllBills();
+        fetchBills({});
     };
 
     return (
@@ -80,6 +84,7 @@ const BillingManagement = () => {
                 <h2 className="mb-4">Billing Management</h2>
             </div>
 
+            {/* Search Form */}
             <Form onSubmit={handleSearch} className="search-form">
                 <Row>
                     <Col md={4}>
@@ -126,12 +131,13 @@ const BillingManagement = () => {
                     <Button type="submit" variant="primary">
                         Search Bills
                     </Button>
-                    <Button type="reset" variant="secondary" onClick={handleReset}>
+                    <Button type="button" variant="secondary" onClick={handleReset}>
                         Reset
                     </Button>
                 </div>
             </Form>
 
+            {/* Bills Table */}
             {loading ? (
                 <div className="text-center p-4">Loading...</div>
             ) : error ? (
@@ -156,9 +162,9 @@ const BillingManagement = () => {
                             {bills.map(bill => (
                                 <tr key={bill.billing_id}>
                                     <td>{bill.billing_id}</td>
-                                    <td>{new Date(bill.date).toLocaleDateString()}</td>
-                                    <td>{bill.customer.first_name} {bill.customer.last_name}</td>
-                                    <td>{bill.driver.first_name} {bill.driver.last_name}</td>
+                                    <td>{bill.bill_date}</td>
+                                    <td>{bill.customer_id} </td>
+                                    <td>{bill.driver_id}</td>
                                     <td>{bill.distance_covered} miles</td>
                                     <td className="amount-cell">${bill.total_amount}</td>
                                     <td>{bill.source_location}</td>
@@ -167,7 +173,7 @@ const BillingManagement = () => {
                                         <Button 
                                             variant="info" 
                                             size="sm"
-                                            onClick={() => navigate(`/admin/bills/${bill.billing_id}`)}
+                                            onClick={() => handleViewDetails(bill.ride_id)}
                                         >
                                             View Details
                                         </Button>

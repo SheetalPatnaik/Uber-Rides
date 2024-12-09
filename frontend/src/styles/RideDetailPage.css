@@ -1,0 +1,80 @@
+.rdp-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Uber Move', Arial, sans-serif;
+  }
+   .rdp-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000;
+  }
+   .rdp-details {
+    background-color: #f6f6f6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+   .rdp-details p {
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+   .rdp-review-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000;
+  }
+   .rdp-existing-review {
+    background-color: #f6f6f6;
+    border-radius: 8px;
+    padding: 20px;
+  }
+   .rdp-review-form {
+    background-color: #f6f6f6;
+    border-radius: 8px;
+    padding: 20px;
+  }
+   .rdp-rating-input,
+  .rdp-content-input {
+    margin-bottom: 15px;
+  }
+   .rdp-submit-btn {
+    background-color: #276EF1;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+   .rdp-submit-btn:hover {
+    background-color: #1a4fa0;
+  }
+   .rdp-error {
+    color: #d9534f;
+    margin-top: 15px;
+  }
+   .rdp-success {
+    color: #5cb85c;
+    margin-top: 15px;
+  }
+   .rdp-loading {
+    text-align: center;
+    font-size: 18px;
+    margin-top: 50px;
+  }
+   @media (max-width: 768px) {
+    .rdp-container {
+      padding: 15px;
+    }
+     .rdp-title,
+    .rdp-review-title {
+      font-size: 24px;
+    }
+     .rdp-details,
+    .rdp-existing-review,
+    .rdp-review-form {
+      padding: 15px;
+    }
+  }
+ 

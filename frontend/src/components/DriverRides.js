@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/DriverRides.css';
 import WebSocketComponent from './WebSocket';
+import DriverNavbar from './DriverNavbar';
 
 const DriverRides = () => {
   const [currentRides, setCurrentRides] = useState([]);
@@ -91,9 +92,7 @@ const DriverRides = () => {
 
   return (
     <div className="driver-rides">
-      <Nav className="driver-rides-nav">
-        {/* Navigation section remains the same */}
-      </Nav>
+      <DriverNavbar />
 
       <Container className="driver-rides-container">
         {error && <div className="error-message">{error}</div>}

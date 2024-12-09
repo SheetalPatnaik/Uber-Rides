@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
+import { baseUrl } from '../services/api-services';
 
 const AdminLogin = () => {
     const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ const AdminLogin = () => {
         formDataToSend.append('password', formData.password);
 
         try {
-            const response = await fetch('http://localhost:8000/administrator/login/', {
+            const response = await fetch(`${baseUrl}/administrator/login/`, {
                 method: 'POST',
                 body: formDataToSend
             });

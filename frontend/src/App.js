@@ -24,6 +24,8 @@ import BillingManagement from './components/BillingManagement';
 import Statistics from './components/Statistics';
 import DriverDetails from './components/DriverDetails';
 import CustomerDetails from './components/CustomerDetails';
+import CustomerNavbar from './components/CustomerNavbar';
+import DriverNavbar from './components/DriverNavbar';
 
 
 function App() {

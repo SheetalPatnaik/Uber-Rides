@@ -3,7 +3,7 @@ import { Container, Nav, Row, Col } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import '../styles/CustomerDashboard.css';
 import Footer from './Footer';
-//import CustomerImage from '../images/customer-hero.jpg'; // You can replace this image with a relevant one for customers
+import CustomerImage from '../images/booking_a_ride.jpeg'; // You can replace this image with a relevant one for customers
 
 const CustomerDashboard = () => {
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ const CustomerDashboard = () => {
           <Col lg={6} md={12} className="p-0">
             <div className="customer-dash-image-wrapper">
               <img 
-                //src={CustomerImage} 
+                src={CustomerImage} 
                 alt="Customer booking a ride" 
                 className="customer-dash-hero-image"
               />

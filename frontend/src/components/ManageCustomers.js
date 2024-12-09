@@ -60,7 +60,7 @@ const ManageCustomers = () => {
     };
 
     const handleAddCustomer = () => {
-        navigate('/admin/customer-signup');
+        navigate('/customer/signup');
     };
 
     const handleDisableCustomer = async (customerId) => {

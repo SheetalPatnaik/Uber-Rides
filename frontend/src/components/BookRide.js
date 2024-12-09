@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
 import axios from 'axios';
 import '../styles/BookRide.css';
+import CustomerNavbar from './CustomerNavbar';
 
 const BookRide = () => {
   const [pickupLocation, setPickupLocation] = useState(null);
@@ -89,12 +90,13 @@ const BookRide = () => {
   };
 
   const handleConfirm = async () => {
-    alert('Ride booking confirmed!'); // Placeholder for actual confirmation logic
+    alert('Ride booking placed!'); // Placeholder for actual confirmation logic
     // Further logic for booking confirmation can go here
   };
 
   return (
     <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}>
+      <CustomerNavbar />
       <div className="booking-container">
         <h2>Book Your Ride</h2>
 

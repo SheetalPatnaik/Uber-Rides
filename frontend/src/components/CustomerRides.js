@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/CustomerRides.css';
 import WebSocketComponent from './WebSocket';
+import CustomerNavbar from './CustomerNavbar';
 
 const CustomerRides = () => {
   const [currentRides, setCurrentRides] = useState([]);
@@ -48,6 +49,7 @@ const CustomerRides = () => {
 
   return (
     <div className="driver-rides">
+      <CustomerNavbar />
       <Nav className="driver-rides-nav">
         {/* Navigation section remains the same */}
       </Nav>
@@ -115,7 +117,7 @@ const CustomerRides = () => {
                         {ride.status}
                       </span>
                     </td>
-                    <td>
+                    {/* <td>
                     <NavLink to={`/customer/ride-detail/${ride.ride_id}`} className="customer-dash-link">
                           Details
                     </NavLink>
@@ -123,7 +125,15 @@ const CustomerRides = () => {
                     <br />
                     <NavLink to={`/customer/view-bill/${ride.ride_id}`} className="customer-dash-link">
                     View Bill
-                    </NavLink>
+                    </NavLink> */}
+                    <td className="cr-action-buttons">
+                     <NavLink to={`/customer/ride-detail/${ride.ride_id}`} className="cr-action-btn">
+                       Details
+                     </NavLink>
+                     <NavLink to={`/customer/view-bill/${ride.ride_id}`} className="cr-action-btn">
+                       View Bill
+                     </NavLink>
+                   </td>
                   </tr>
                 ))}
               </tbody>

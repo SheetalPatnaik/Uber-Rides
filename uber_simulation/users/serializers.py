@@ -66,7 +66,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = Customer
         fields = [
             'first_name', 'last_name', 'address', 'city', 'state', 'zip_code', 
-            'phone_number', 'email', 'credit_card'
+            'phone_number', 'email', 'credit_card', 'profile_photo'
         ]
 
     def validate_email(self, value):

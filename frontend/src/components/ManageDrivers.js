@@ -29,7 +29,8 @@ const ManageDrivers = () => {
     };
 
     const handleAddDriver = () => {
-        navigate('/admin/driver-signup');
+        navigate('/driver/signup');
+        
     };
 
     const handleViewDriver = (driverId) => {

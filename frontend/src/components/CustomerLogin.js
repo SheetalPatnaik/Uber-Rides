@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import '../styles/CustomerLogin.css';
 
 const CustomerLogin = () => {
   const navigate = useNavigate();
@@ -20,20 +21,13 @@ const CustomerLogin = () => {
         password: password,
       });
 
-      // Store tokens in localStorage
       localStorage.setItem("access_token", response.data.access_token);
       localStorage.setItem("refresh_token", response.data.refresh_token);
       localStorage.setItem("customer_id", response.data.customer_id);
 
       setSuccess("Login successful!");
-      console.log("Access Token:", response.data.access_token);
-      console.log("Refresh Token:", response.data.refresh_token);
-      console.log("Customer ID:", response.data.customer_id);
       navigate("/customer/dashboard");
-      // Redirect to the customer dashboard or another page
-      
     } catch (error) {
-      // Handle errors
       if (error.response && error.response.data) {
         setError(error.response.data.error || "Login failed.");
       } else {
@@ -43,10 +37,10 @@ const CustomerLogin = () => {
   };
 
   return (
-    <div>
+    <div className="login-container">
       <h2>Customer Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
+      <form className="login-form" onSubmit={handleLogin}>
+        <div className="form-group">
           <label htmlFor="customer_id">Customer ID:</label>
           <input
             type="text"
@@ -56,7 +50,7 @@ const CustomerLogin = () => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -66,10 +60,12 @@ const CustomerLogin = () => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" className="login-btn">
+          Login
+        </button>
       </form>
-      {success && <p style={{ color: "green" }}>{success}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p className="message success-message">{success}</p>}
+      {error && <p className="message error-message">{error}</p>}
     </div>
   );
 };

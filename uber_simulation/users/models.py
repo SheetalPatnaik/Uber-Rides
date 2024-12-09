@@ -30,6 +30,7 @@ class Customer(AbstractBaseUser):
     email = models.EmailField(unique=True)
     credit_card = models.CharField(max_length=20)
     password = models.CharField(max_length=255, null=True)
+    profile_photo = models.ImageField(upload_to='customer_photos/', null=True, blank=True)
     chat_id = models.CharField(max_length=255, null=True)
 
 

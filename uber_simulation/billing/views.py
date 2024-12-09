@@ -90,9 +90,26 @@ class BillingViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(customer_id=params['customer_id'])
         if 'billing_id' in params:
             queryset = queryset.filter(billing_id=params['billing_id'])
+
+        bills_data_list = []
+        for bill in queryset:
+           bill_data = {
+               'billing_id': bill.billing_id,
+               'bill_date': bill.date,
+               'pickup_time': bill.pickup_time.strftime("%Y-%m-%d %H:%M:%S"),
+               'drop_off_time': bill.drop_off_time.strftime("%Y-%m-%d %H:%M:%S"),
+               'distance_covered': float(bill.distance_covered),
+               'total_amount': float(bill.total_amount),
+               'source_location': bill.source_location,
+               'destination_location': bill.destination_location,
+               'driver_id': bill.driver.driver_id,
+               'customer_id': bill.customer.customer_id,
+               'ride_id': bill.ride.booking_id if bill.ride else None
+           }
+           bills_data_list.append(bill_data)
             
-        serializer = self.serializer_class(queryset, many=True)
-        return Response(serializer.data)
+        
+        return Response(bills_data_list, status=status.HTTP_200_OK)
     
 @api_view(["GET"])
 def getBillInfo(request, ride_id):
@@ -122,3 +139,172 @@ def getBillInfo(request, ride_id):
             {'error': 'Bill not found'},
             status=status.HTTP_404_NOT_FOUND
         )
+ #Dhruv's code   
+@api_view(['GET'])
+def get_all_bills(request):
+   try:
+       # Get all bills, ordered by date (most recent first, as per your model Meta)
+       bills = BillingInformation.objects.all()
+      
+       # Format all bills
+       bills_data = []
+       for bill in bills:
+           bill_data = {
+               'billing_id': bill.billing_id,
+               'bill_date': bill.date,
+               'pickup_time': bill.pickup_time.strftime("%Y-%m-%d %H:%M:%S"),
+               'drop_off_time': bill.drop_off_time.strftime("%Y-%m-%d %H:%M:%S"),
+               'distance_covered': float(bill.distance_covered),
+               'total_amount': float(bill.total_amount),
+               'source_location': bill.source_location,
+               'destination_location': bill.destination_location,
+               'driver_id': bill.driver.driver_id,
+               'customer_id': bill.customer.customer_id,
+               'ride_id': bill.ride.booking_id if bill.ride else None
+           }
+           bills_data.append(bill_data)
+      
+       # Add summary statistics
+       total_revenue = sum(float(bill.total_amount) for bill in bills)
+       total_rides = len(bills)
+       total_distance = sum(float(bill.distance_covered) for bill in bills)
+      
+       response_data = {
+           'bills': bills_data,
+           'summary': {
+               'total_bills': total_rides,
+               'total_revenue': round(total_revenue, 2),
+               'total_distance_covered': round(total_distance, 2),
+               'average_bill_amount': round(total_revenue/total_rides, 2) if total_rides > 0 else 0
+           }
+       }
+      
+       return Response(response_data, status=status.HTTP_200_OK)
+      
+   except Exception as e:
+       print(f"Error fetching bills: {str(e)}")  # For debugging
+       return Response(
+           {'error': 'Failed to fetch bills'},
+           status=status.HTTP_500_INTERNAL_SERVER_ERROR
+       )
+
+
+@api_view(['GET'])
+def get_bill_details(request, ride_id):
+   try:
+       bill = get_object_or_404(BillingInformation, ride_id=ride_id)
+      
+       response_data = {
+           'billing_id': bill.billing_id,
+           'bill_date': bill.date,
+           'pickup_time': bill.pickup_time.strftime("%Y-%m-%d %H:%M:%S"),
+           'drop_off_time': bill.drop_off_time.strftime("%Y-%m-%d %H:%M:%S"),
+           'distance_covered': float(bill.distance_covered),
+           'total_amount': float(bill.total_amount),
+           'source_location': bill.source_location,
+           'destination_location': bill.destination_location,
+           'driver_id': bill.driver.driver_id,
+           'customer_id': bill.customer.customer_id,
+           'ride_id': bill.ride.booking_id if bill.ride else None
+       }
+      
+       return Response(response_data, status=status.HTTP_200_OK)
+      
+   except BillingInformation.DoesNotExist:
+       return Response(
+           {'error': 'Bill not found for this ride'},
+           status=status.HTTP_404_NOT_FOUND
+       )
+   except Exception as e:
+       print(f"Error fetching bill: {str(e)}")
+       return Response(
+           {'error': 'Failed to fetch bill details'},
+           status=status.HTTP_500_INTERNAL_SERVER_ERROR
+       )
+@api_view(['GET'])
+def search_bills(request):
+   try:
+       # Get query parameters
+       billing_id = request.GET.get('billing_id', '')
+       start_date = request.GET.get('start_date', '')
+       end_date = request.GET.get('end_date', '')
+       driver_id = request.GET.get('driver_id', '')
+       customer_id = request.GET.get('customer_id', '')
+
+
+       # Start with all bills
+       queryset = BillingInformation.objects.all()
+
+
+       # Apply filters based on provided parameters
+       if billing_id:
+           queryset = queryset.filter(billing_id__icontains=billing_id)
+      
+       if start_date:
+           start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+           queryset = queryset.filter(date__gte=start_date)
+      
+       if end_date:
+           end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+           queryset = queryset.filter(date__lte=end_date)
+      
+       if driver_id:
+           queryset = queryset.filter(driver__driver_id=driver_id)
+      
+       if customer_id:
+           queryset = queryset.filter(customer__customer_id=customer_id)
+
+
+       # Format the response data
+       bills_data = []
+       for bill in queryset:
+           bill_data = {
+               'billing_id': bill.billing_id,
+               'date': bill.date,
+               'customer': {
+                   'first_name': bill.customer.first_name,
+                   'last_name': bill.customer.last_name,
+                   'customer_id': bill.customer.customer_id
+               },
+               'driver': {
+                   'first_name': bill.driver.first_name,
+                   'last_name': bill.driver.last_name,
+                   'driver_id': bill.driver.driver_id
+               },
+               'distance_covered': float(bill.distance_covered),
+               'total_amount': float(bill.total_amount),
+               'source_location': bill.source_location,
+               'destination_location': bill.destination_location,
+               'pickup_time': bill.pickup_time.strftime("%Y-%m-%d %H:%M:%S"),
+               'drop_off_time': bill.drop_off_time.strftime("%Y-%m-%d %H:%M:%S"),
+               'ride_id': bill.ride.booking_id if bill.ride else None
+           }
+           bills_data.append(bill_data)
+
+
+       # Add summary statistics
+       total_revenue = sum(float(bill.total_amount) for bill in queryset)
+       total_rides = len(bills_data)
+       total_distance = sum(float(bill.distance_covered) for bill in queryset)
+
+
+       response_data = {
+           'bills': bills_data,
+           'summary': {
+               'total_bills': total_rides,
+               'total_revenue': round(total_revenue, 2),
+               'total_distance': round(total_distance, 2),
+               'average_bill_amount': round(total_revenue/total_rides, 2) if total_rides > 0 else 0
+           }
+       }
+
+
+       return Response(response_data, status=status.HTTP_200_OK)
+
+
+   except Exception as e:
+       print(f"Error searching bills: {str(e)}")  # For debugging
+       return Response(
+           {'error': 'Failed to search bills'},
+           status=status.HTTP_500_INTERNAL_SERVER_ERROR
+       )

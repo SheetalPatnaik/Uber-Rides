@@ -19,5 +19,6 @@ urlpatterns = [
     path('ride-requests/', get_ride_requests, name='ride-requests'),
     path('ongoing-ride/', get_ongoing_ride, name='ongoing-ride'),
     path('rides/', get_rides, name='rides'),
+    path('delete-driver/<str:driver_id>/', delete_driver, name='delete_driver'),
     path('', include(router.urls)),
 ]

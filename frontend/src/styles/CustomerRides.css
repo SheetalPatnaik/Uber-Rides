@@ -1,190 +1,183 @@
-.driver-rides {
+.cr-rides {
     min-height: 100vh;
     background-color: #f8f8f9;
     padding: 2rem 0;
     font-family: 'Uber Move', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   }
-   .driver-rides-container {
+   .cr-rides-nav {
+    background-color: #000000;
+    padding: 1rem 2rem;
+    margin-bottom: 2rem;
+  }
+   .cr-back-button {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+  }
+   .cr-back-button:hover {
+    background-color: #333333;
+    color: #ffffff;
+  }
+   .cr-rides-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0 1rem;
   }
-   .driver-rides h2 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 2rem;
-    color: #000000;
-  }
-   .error-message {
+   .cr-error-message {
     background-color: #ffebee;
     color: #c62828;
     padding: 1rem;
     border-radius: 8px;
     margin-bottom: 2rem;
-    text-align: center;
   }
-   .driver-rides-current {
-    margin-bottom: 4rem;
+   .cr-rides h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #000000;
   }
-   .ride-card {
+   .cr-ride-card {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    height: 100%;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
   }
-   .ride-card:hover {
+   .cr-ride-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
-   .ride-card-header {
+   .cr-ride-card-header {
     padding: 1.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
-   .ride-card-header h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
-   .ride-card-body {
+   .cr-ride-card-body {
     padding: 1.5rem;
   }
-   .ride-card-body p {
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
-  }
-   .ride-card-body strong {
-    color: #333;
-  }
-   .rides-table-wrapper {
-    overflow-x: auto;
-    margin-top: 2rem;
+   .cr-rides-table-wrapper {
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
   }
-   .rides-table {
+   .cr-rides-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
   }
-   .rides-table th {
+   .cr-rides-table th {
     background-color: #f6f6f6;
     padding: 1rem;
     text-align: left;
     font-weight: 600;
-    color: #333;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
-   .rides-table td {
+   .cr-rides-table td {
     padding: 1rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    color: #666;
   }
-   .rides-table tr:hover {
-    background-color: #f8f8f9;
-  }
-   .ride-status,
-  .status-badge {
+   .cr-status-badge {
     padding: 0.5rem 1rem;
-    border-radius: 25px;
+    border-radius: 20px;
     font-size: 0.875rem;
     font-weight: 500;
   }
-   .status-badge.pending {
-    background-color: #fff3cd;
-    color: #856404;
+   .cr-status-badge.completed {
+    background-color: #e8f5e9;
+    color: #2e7d32;
   }
-   .status-badge.accepted {
-    background-color: #d4edda;
-    color: #155724;
+   .cr-action-buttons {
+    display: flex;
+    gap: 0.5rem;
   }
-   .status-badge.completed {
-    background-color: #cce5ff;
-    color: #004085;
-  }
-   .status-badge.cancelled {
-    background-color: #ffebee;
-    color: #c62828;
-  }
-   .status-badge.inprogress {
-    background-color: #e8eaf6;
-    color: #3f51b5;
-  }
-   .customer-dash-link {
+   .cr-action-btn {
+    background-color: #000000;
     color: #ffffff;
     text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
-    background-color: #000000;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
     transition: all 0.3s ease;
     display: inline-block;
-    font-weight: 500;
   }
-   .customer-dash-link:hover {
+   .cr-action-btn:hover {
     background-color: #333333;
+    color: #ffffff;
   }
-   .accept-btn {
+   @media (max-width: 768px) {
+    .cr-rides-container {
+      padding: 0 0.5rem;
+    }
+     .cr-action-buttons {
+      flex-direction: column;
+    }
+     .cr-action-btn {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+     .cr-rides-table {
+      font-size: 0.875rem;
+    }
+  }
+  .cr-rides-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    vertical-align: middle; /* Add this to align content vertically */
+    white-space: nowrap; /* Add this to prevent text wrapping */
+  }
+   .cr-action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start; /* Add this to align buttons */
+    align-items: center; /* Add this to center buttons vertically */
+  }
+   .cr-action-btn {
     background-color: #000000;
     color: #ffffff;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
     font-weight: 500;
-    cursor: pointer;
     transition: all 0.3s ease;
+    display: inline-block;
+    min-width: 100px; /* Add this to make buttons same width */
+    text-align: center; /* Add this to center text */
   }
-   .accept-btn:hover {
-    background-color: #333333;
-  }
-   @media (max-width: 991.98px) {
-    .driver-rides {
-      padding: 1rem 0;
+   /* Update the media query */
+  @media (max-width: 768px) {
+    .cr-rides-container {
+      padding: 0 0.5rem;
     }
-     .driver-rides-container {
-      padding: 1rem;
+     .cr-action-buttons {
+      flex-direction: row; /* Change to row to keep buttons side by side */
+      justify-content: flex-start;
+      gap: 0.5rem;
     }
-     .ride-card {
-      margin-bottom: 1rem;
+     .cr-action-btn {
+      width: auto; /* Change to auto to prevent full width */
+      min-width: 100px; /* Keep minimum width */
+      margin-bottom: 0; /* Remove margin */
     }
-     .rides-table th,
-    .rides-table td {
-      padding: 0.75rem;
-    }
-     .customer-dash-link,
-    .accept-btn {
-      padding: 0.6rem 1.2rem;
+     .cr-rides-table {
       font-size: 0.875rem;
     }
   }
-   @media (max-width: 767.98px) {
-    .driver-rides h2 {
-      font-size: 1.5rem;
-    }
-     .ride-card-header h3 {
-      font-size: 1.1rem;
-    }
-     .rides-table {
-      font-size: 0.875rem;
-    }
-     .status-badge {
-      padding: 0.35rem 0.7rem;
-      font-size: 0.75rem;
-    }
+   /* Add these new styles for better table responsiveness */
+  .cr-rides-table-wrapper {
+    overflow-x: auto; /* Add horizontal scroll for small screens */
   }
-   .loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #000;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 2rem auto;
+   .cr-rides-table th,
+  .cr-rides-table td {
+    max-width: 200px; /* Add maximum width */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for long text */
   }
-   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  } 
+ 
