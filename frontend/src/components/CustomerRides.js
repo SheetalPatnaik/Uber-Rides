@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/DriverRides.css';
+import '../styles/CustomerRides.css';
 import WebSocketComponent from './WebSocket';
 
 const CustomerRides = () => {
@@ -120,6 +120,10 @@ const CustomerRides = () => {
                           Details
                     </NavLink>
                     </td>
+                    <br />
+                    <NavLink to={`/customer/view-bill/${ride.ride_id}`} className="customer-dash-link">
+                    View Bill
+                    </NavLink>
                   </tr>
                 ))}
               </tbody>

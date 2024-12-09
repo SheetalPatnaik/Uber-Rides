@@ -252,6 +252,47 @@ const DriverProfile = () => {
     }
   };
 
+  //Adding location update
+  const updateLocation = async () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
+  
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        let { latitude, longitude } = position.coords;
+        // Round latitude and longitude to 6 decimal places
+        latitude = parseFloat(latitude.toFixed(6));
+        longitude = parseFloat(longitude.toFixed(6));
+  
+        try {
+          await axios.put(
+            `http://localhost:8000/api/driver/profile/update`,
+            {
+              current_location_lat: latitude,
+              current_location_lng: longitude,
+            },
+            {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
+              },
+            }
+          );
+  
+          alert('Location updated successfully!');
+          fetchDriverProfile(); // Refresh profile data after update
+        } catch (err) {
+          console.error('Error updating location:', err);
+          alert('Failed to update location. Please try again.');
+        }
+      },
+      (error) => {
+        alert(`Failed to get current location: ${error.message}`);
+      }
+    );
+  };
+  
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -400,7 +441,13 @@ const DriverProfile = () => {
                     Save Changes
                   </button>
                 </div>
-              )}
+                )}
+                  {/* Button to update location */}
+                <div className="driver-profile-actions">
+                  <button type="button" className="driver-profile-save-btn" onClick={updateLocation}>
+                  Update Location
+                  </button>
+                </div>
             </Col>
           </Row>
         </form>

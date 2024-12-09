@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/api';
 import axios from 'axios';
+import '../styles/BookRide.css';
 
 const BookRide = () => {
   const [pickupLocation, setPickupLocation] = useState(null);

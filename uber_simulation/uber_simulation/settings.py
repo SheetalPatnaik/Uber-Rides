@@ -138,10 +138,10 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'uber_db',
-        'USER': 'root',
+        'NAME': 'uber_db', #take from env
+        'USER': 'root', # Replace with your MySQL username from enev
         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': 'localhost', # Replace with your MySQL server host form env
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
@@ -168,6 +168,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'driver.Driver'
+AUTH_USER_MODEL = 'administrator.Administrator'
 
 from datetime import timedelta
 
@@ -210,7 +211,7 @@ GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://{}:6379/1".format(os.getenv("REDIS_HOST")),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient"
         }

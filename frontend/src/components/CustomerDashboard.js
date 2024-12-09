@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Nav, Row, Col } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
-//import '../styles/CustomerDashboard.css';
+import '../styles/CustomerDashboard.css';
 import Footer from './Footer';
 //import CustomerImage from '../images/customer-hero.jpg'; // You can replace this image with a relevant one for customers
 
@@ -24,7 +24,7 @@ const CustomerDashboard = () => {
       <Nav className="customer-dash-nav navbar navbar-expand-lg navbar-dark bg-black py-3">
         <Container fluid>
           <NavLink to="/" className="customer-dash-brand">
-            Ride Share
+            Uber Ride
           </NavLink>
           <div className="customer-dash-nav-links">
             <NavLink to="/customer/dashboard" className="customer-dash-link">

@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/billing/', include('billing.urls')),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include('users.urls')),
-    path('admin-module/', include('administrator.urls')),
+    path('administrator/', include('administrator.urls')),
+    path('visualizations/', include('visualizations.urls')),
 
 ]

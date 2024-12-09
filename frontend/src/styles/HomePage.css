@@ -1,77 +1,62 @@
 .homepage {
-    min-height: 100vh;
-    background-color: #ffffff;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .main-content {
-    flex: 1;
-  }
-  
-  .navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .nav-link {
-    color: #ffffff;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-  }
-  
-  .sign-up-btn {
-    border-radius: 25px;
-    padding: 0.5rem 1.5rem;
-    font-weight: 500;
-  }
-  
-  .main-content {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
-  }
-  
-  .driver-illustration {
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-  }
-  
-  @media (max-width: 991.98px) {
-    .main-content {
-      text-align: center;
-    }
-    
-    .driver-illustration {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-  }
-  
-  @media (max-width: 767.98px) {
-    .navbar {
-      padding: 1rem 0;
-    }
-    
-    .main-content {
-      padding-top: 3rem;
-      padding-bottom: 3rem;
-    }
-  }
-
-  .navbar .nav-link {
-    color: white !important;
-    transition: color 0.3s ease;
+  min-height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
 }
-
-.navbar .nav-link:hover {
-    color: rgba(255, 255, 255, 0.8) !important;
+ .homepage .main-content {
+  flex: 1;
 }
-
-.navbar-brand {
-    color: white !important;
+ .homepage .navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+ .homepage .navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+ .homepage .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s ease;
+}
+ .homepage .nav-link:hover {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+ .homepage .sign-up-btn {
+  border-radius: 25px;
+  padding: 0.5rem 1.5rem;
+  font-weight: 500;
+}
+ .homepage .main-content {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+ .homepage .driver-illustration {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+}
+ @media (max-width: 991.98px) {
+  .homepage .main-content {
+    text-align: center;
+  }
+ 
+  .homepage .driver-illustration {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+ @media (max-width: 767.98px) {
+  .homepage .navbar {
+    padding: 1rem 0;
+  }
+ 
+  .homepage .main-content {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+ .homepage .navbar-brand {
+  color: white !important;
 }

@@ -1,0 +1,190 @@
+.driver-rides {
+    min-height: 100vh;
+    background-color: #f8f8f9;
+    padding: 2rem 0;
+    font-family: 'Uber Move', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+   .driver-rides-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+   .driver-rides h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #000000;
+  }
+   .error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+   .driver-rides-current {
+    margin-bottom: 4rem;
+  }
+   .ride-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+   .ride-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+   .ride-card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+   .ride-card-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+   .ride-card-body {
+    padding: 1.5rem;
+  }
+   .ride-card-body p {
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+  }
+   .ride-card-body strong {
+    color: #333;
+  }
+   .rides-table-wrapper {
+    overflow-x: auto;
+    margin-top: 2rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+   .rides-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+   .rides-table th {
+    background-color: #f6f6f6;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+   .rides-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: #666;
+  }
+   .rides-table tr:hover {
+    background-color: #f8f8f9;
+  }
+   .ride-status,
+  .status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+   .status-badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+   .status-badge.accepted {
+    background-color: #d4edda;
+    color: #155724;
+  }
+   .status-badge.completed {
+    background-color: #cce5ff;
+    color: #004085;
+  }
+   .status-badge.cancelled {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+   .status-badge.inprogress {
+    background-color: #e8eaf6;
+    color: #3f51b5;
+  }
+   .customer-dash-link {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    background-color: #000000;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-weight: 500;
+  }
+   .customer-dash-link:hover {
+    background-color: #333333;
+  }
+   .accept-btn {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+   .accept-btn:hover {
+    background-color: #333333;
+  }
+   @media (max-width: 991.98px) {
+    .driver-rides {
+      padding: 1rem 0;
+    }
+     .driver-rides-container {
+      padding: 1rem;
+    }
+     .ride-card {
+      margin-bottom: 1rem;
+    }
+     .rides-table th,
+    .rides-table td {
+      padding: 0.75rem;
+    }
+     .customer-dash-link,
+    .accept-btn {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.875rem;
+    }
+  }
+   @media (max-width: 767.98px) {
+    .driver-rides h2 {
+      font-size: 1.5rem;
+    }
+     .ride-card-header h3 {
+      font-size: 1.1rem;
+    }
+     .rides-table {
+      font-size: 0.875rem;
+    }
+     .status-badge {
+      padding: 0.35rem 0.7rem;
+      font-size: 0.75rem;
+    }
+  }
+   .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+  }
+   @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  } 

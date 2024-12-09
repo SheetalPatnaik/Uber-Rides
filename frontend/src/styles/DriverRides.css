@@ -33,7 +33,7 @@
   }
   
   .driver-rides-link {
-    color: #fff;
+    color: #ffffff;
     text-decoration: none;
     font-weight: 500;
     padding: 0.5rem 1rem;
@@ -132,7 +132,7 @@
   .rides-table td {
     padding: 1rem;
     text-align: left;
-    border-bottom: 1px solid #dee2e6;
+    border-bottom: 1px solid #124980;
   }
   
   .status-badge {
