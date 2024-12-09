@@ -183,7 +183,8 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
-
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 5  # 5 days
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 

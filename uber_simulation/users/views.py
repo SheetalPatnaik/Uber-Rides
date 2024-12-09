@@ -121,6 +121,44 @@ def login_customer(request):
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+@csrf_exempt
+@api_view(['GET'])
+def list_customers(request):
+    try:
+        customers = Customer.objects.all()
+        customers_data = []
+        for customer in customers:
+            customer_data = {
+                'customer_id': customer.customer_id,
+                'first_name': customer.first_name,
+                'last_name': customer.last_name,
+                'email': customer.email,
+                'phone_number': customer.phone_number,
+                'city': customer.city,
+                'state': customer.state,
+                'is_active': True,  # You can add this field to your model if needed
+                'total_rides': Booking.objects.filter(customer=customer).count()
+            }
+            customers_data.append(customer_data)
+        return Response(customers_data, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(f"Error fetching customers: {str(e)}")
+        return Response(
+            {'error': 'Failed to fetch customers'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['DELETE'])
+@csrf_exempt
+def delete_customer(request, customer_id):
+   try:
+       customer = get_object_or_404(Customer, customer_id=customer_id)
+       customer.delete()
+       return JsonResponse({'message': 'Customer deleted successfully'}, status=204)
+   except Exception as e:
+       return JsonResponse({'error': str(e)}, status=400)
+
 ##bookRide excluding fair amount
 
 # from rest_framework import status

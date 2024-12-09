@@ -49,10 +49,8 @@ const CustomerRides = () => {
 
   return (
     <div className="driver-rides">
-      <CustomerNavbar />
-      <Nav className="driver-rides-nav">
-        {/* Navigation section remains the same */}
-      </Nav>
+      <div className="cr-wrapper">
+      <CustomerNavbar />
 
       <Container className="driver-rides-container">
         {error && <div className="error-message">{error}</div>}
@@ -141,6 +139,7 @@ const CustomerRides = () => {
           </div>
         </section>
       </Container>
+      </div>
       <WebSocketComponent type={'customer'} callback={() => { fetchOngoingRides(); fetchRides() }} />
     </div>
   );

@@ -1,10 +1,20 @@
 // components/DriverNavbar.js
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import '../styles/DriverNavbar.css';
 
 
 const DriverNavbar = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    // Clear all stored data
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('customerData');
+    
+    // Redirect to login page
+    navigate('/driver/login');
+  };
  return (
    <nav className="dn-navbar">
      <div className="dn-container">
@@ -49,12 +59,12 @@ const DriverNavbar = () => {
            Profile
          </NavLink>
         
-         <NavLink
-           to="/logout"
-           className="dn-nav-link dn-logout"
-         >
-           Logout
-         </NavLink>
+         <button
+            onClick={handleLogout}
+            className="cn-nav-link cn-logout"
+          >
+            Logout
+          </button>
        </div>
      </div>
    </nav>

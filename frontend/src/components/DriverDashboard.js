@@ -33,9 +33,6 @@ const DriverDashboard = () => {
             <NavLink to="/driver/earnings" className="driver-dash-link">
               Earnings
             </NavLink>
-            <NavLink to="/driver/ratings" className="driver-dash-link">
-              Ratings
-            </NavLink>
             <NavLink to="/driver/rides" className="driver-dash-link">
               Rides
             </NavLink>

@@ -3,9 +3,12 @@ import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
 import { Form, Button, Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
+import { useNavigate } from 'react-router-dom'; 
+
 const libraries = ['places'];
 
 const CustomerSignupForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     customer_id: '',
     first_name: '',
@@ -117,6 +120,12 @@ const CustomerSignupForm = () => {
           credit_card: '',
           password: '',
         });
+        // Add a small delay before navigation to show the success message
+        setTimeout(() => {
+          navigate('/customer/login');
+          // Alternatively, if you're using React Router:
+          // navigate('/customer/login');
+        }, 1500);
       } else {
         setErrorMessages(['Customer with the same SSN already exists.']);
       }

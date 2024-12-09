@@ -1,147 +1,96 @@
-/* DriverSignupForm.css */
-.driver-signup {
-    min-height: 100vh;
-    background-color: #ffffff;
+.dsf-driver-signup {
+  background-color: #f8f8f9;
+  min-height: 100vh;
+  padding: 40px 0;
+  font-family: 'Uber Move', Arial, sans-serif;
+}
+ .dsf-driver-signup-container {
+  max-width: 800px;
+}
+ .dsf-driver-signup-form-wrapper {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+ .dsf-driver-signup-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #000000;
+}
+ .dsf-driver-signup-message {
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  color: #333333;
+}
+ .dsf-driver-signup-photo-section {
+  margin-bottom: 20px;
+}
+ .dsf-driver-signup-photo-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ .dsf-driver-signup-photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+ .dsf-driver-signup-photo-placeholder {
+  color: #999999;
+  font-size: 14px;
+}
+ .dsf-driver-signup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+ .dsf-driver-signup-input,
+.dsf-driver-signup-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 16px;
+}
+ .dsf-driver-signup-file-input {
+  width: 100%;
+  margin-top: 10px;
+}
+ .dsf-driver-signup-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+ .dsf-driver-signup-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #010203;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+ .dsf-driver-signup-button:hover {
+  background-color: #50545a;
+}
+ @media (max-width: 768px) {
+  .dsf-driver-signup-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .driver-signup-nav {
-    background-color: #000;
-    padding: 1rem 0;
-    margin-bottom: 3rem;
+   .dsf-driver-signup-form-wrapper {
+    padding: 20px;
   }
-  .driver-signup-file-label {
-    display: block;
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-  }
-  
-  .driver-signup-file-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e2e2e2;
-    border-radius: 8px;
-    background-color: #f8f8f8;
-  }
-  
-  .driver-signup-brand {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.5rem;
-    font-weight: 500;
-  }
-  
-  .driver-signup-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 16px;
-    margin-bottom: 3rem;
-  }
-  
-  .driver-signup-form-wrapper {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 32px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .driver-signup-title {
-    font-size: 24px;
-    font-weight: 500;
-    margin-bottom: 32px;
-    text-align: center;
-  }
-  
-  .driver-signup-photo-section {
-    text-align: center;
-    margin-bottom: 32px;
-  }
-  
-  .driver-signup-photo-preview {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin: 0 auto;
-    overflow: hidden;
-    border: 2px dashed #ccc;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
-  .driver-signup-photo-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .driver-signup-photo-placeholder {
-    color: #666;
-  }
-  
-  .driver-signup-photo-input {
-    display: none;
-  }
-  
-  .driver-signup-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  
-  .driver-signup-input-group {
-    margin-bottom: 16px;
-  }
-  
-  .driver-signup-input-group.full-width {
-    grid-column: 1 / -1;
-  }
-  
-  .driver-signup-input-group input,
-  .driver-signup-input-group select {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #e2e2e2;
-    border-radius: 8px;
-    font-size: 16px;
-    line-height: 24px;
-  }
-  
-  .driver-signup-input-group input:focus,
-  .driver-signup-input-group select:focus {
-    outline: none;
-    border-color: #000;
-  }
-  
-  .driver-signup-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #000;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-top: 24px;
-    transition: background-color 0.2s;
-  }
-  
-  .driver-signup-button:hover {
-    background-color: #333;
-  }
-  
-  @media (max-width: 768px) {
-    .driver-signup-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .driver-signup-container {
-      padding: 0 24px;
-    }
-    
-    .driver-signup-form-wrapper {
-      padding: 24px;
-    }
-  }
+}

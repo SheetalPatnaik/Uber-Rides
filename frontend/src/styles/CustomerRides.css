@@ -126,19 +126,49 @@
       font-size: 0.875rem;
     }
   }
+  /* Table styling */
+.cr-rides-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed; /* Add this to control column widths */
+  }
+   .cr-rides-table th,
   .cr-rides-table td {
     padding: 1rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    vertical-align: middle; /* Add this to align content vertically */
-    white-space: nowrap; /* Add this to prevent text wrapping */
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-   .cr-action-buttons {
+   /* Set specific widths for each column */
+  .cr-rides-table th:nth-child(1),
+  .cr-rides-table td:nth-child(1) { width: 5%; }  /* Ride ID */
+  .cr-rides-table th:nth-child(2),
+  .cr-rides-table td:nth-child(2) { width: 12%; } /* Created */
+  .cr-rides-table th:nth-child(3),
+  .cr-rides-table td:nth-child(3) { width: 10%; } /* Driver */
+  .cr-rides-table th:nth-child(4),
+  .cr-rides-table td:nth-child(4) { width: 20%; } /* Pickup */
+  .cr-rides-table th:nth-child(5),
+  .cr-rides-table td:nth-child(5) { width: 20%; } /* Dropoff */
+  .cr-rides-table th:nth-child(6),
+  .cr-rides-table td:nth-child(6) { width: 8%; }  /* Fare */
+  .cr-rides-table th:nth-child(7),
+  .cr-rides-table td:nth-child(7) { width: 10%; } /* Status */
+  .cr-rides-table th:nth-child(8),
+  .cr-rides-table td:nth-child(8) { width: 15%; } /* Action */
+   /* Action buttons container */
+  .cr-action-buttons {
     display: flex;
     gap: 0.5rem;
-    justify-content: flex-start; /* Add this to align buttons */
-    align-items: center; /* Add this to center buttons vertically */
+    justify-content: flex-start;
+    align-items: center;
+    white-space: nowrap;
   }
-   .cr-action-btn {
+   /* Action buttons */
+  .cr-action-btn {
     background-color: #000000;
     color: #ffffff;
     text-decoration: none;
@@ -148,36 +178,32 @@
     font-weight: 500;
     transition: all 0.3s ease;
     display: inline-block;
-    min-width: 100px; /* Add this to make buttons same width */
-    text-align: center; /* Add this to center text */
+    width: 100px; /* Fixed width for both buttons */
+    text-align: center;
   }
-   /* Update the media query */
-  @media (max-width: 768px) {
-    .cr-rides-container {
-      padding: 0 0.5rem;
-    }
-     .cr-action-buttons {
-      flex-direction: row; /* Change to row to keep buttons side by side */
-      justify-content: flex-start;
-      gap: 0.5rem;
-    }
-     .cr-action-btn {
-      width: auto; /* Change to auto to prevent full width */
-      min-width: 100px; /* Keep minimum width */
-      margin-bottom: 0; /* Remove margin */
-    }
-     .cr-rides-table {
-      font-size: 0.875rem;
-    }
+   /* Status badge */
+  .cr-status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    min-width: 90px;
   }
-   /* Add these new styles for better table responsiveness */
+   /* Table wrapper */
   .cr-rides-table-wrapper {
-    overflow-x: auto; /* Add horizontal scroll for small screens */
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
   }
-   .cr-rides-table th,
-  .cr-rides-table td {
-    max-width: 200px; /* Add maximum width */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis for long text */
+   @media (max-width: 768px) {
+    .cr-rides-table {
+      min-width: 1000px; /* Minimum width to prevent squishing */
+    }
   }
+ 
+   
+ 
  

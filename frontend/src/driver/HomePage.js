@@ -15,22 +15,22 @@ const HomePage = () => {
            <Nav.Link href="/" className="navbar-brand">Uber</Nav.Link>
          </Nav.Item>
          <Nav className="me-auto">
-           <Nav.Link href="/ride">Ride</Nav.Link>
+           <Nav.Link href="/customer/signup">Ride</Nav.Link>
            <Nav.Link href="/driver/signup">Drive</Nav.Link>
-           <Nav.Link href="/business">Business</Nav.Link>
-           <Nav.Link href="/uber-eats">Uber Eats</Nav.Link>
-           <Nav.Link href="/about">About</Nav.Link>
+           <Nav.Link href="/">Business</Nav.Link>
+           <Nav.Link href="/">Uber Eats</Nav.Link>
+           <Nav.Link href="/">About</Nav.Link>
          </Nav>
          <Nav>
-           <NavLink to="/help" className="nav-link">Help</NavLink>
+           <NavLink to="/" className="nav-link">Help</NavLink>
            <NavLink to="/customer/login" className="nav-link">Customer Login</NavLink>
-           <NavLink to="/customer/signup" className="nav-link">
+           {/* <NavLink to="/customer/signup" className="nav-link">
              <Button variant="light" className="sign-up-btn">Customer Sign up</Button>
-           </NavLink>
+           </NavLink> */}
            <NavLink to="/driver/login" className="nav-link">Driver Login</NavLink>
-           <NavLink to="/driver/signup" className="nav-link">
+           {/* <NavLink to="/driver/signup" className="nav-link">
              <Button variant="light" className="sign-up-btn">Driver Sign up</Button>
-           </NavLink>
+           </NavLink> */}
          </Nav>
        </Container>
      </Nav>
