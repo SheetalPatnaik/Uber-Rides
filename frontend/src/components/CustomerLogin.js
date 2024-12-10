@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import '../styles/CustomerLogin.css';
-
+import { baseUrl } from '../services/api-services';
 const CustomerLogin = () => {
   const navigate = useNavigate();
   const [customerId, setCustomerId] = useState("");
@@ -16,7 +16,7 @@ const CustomerLogin = () => {
     setSuccess("");
 
     try {
-      const response = await axios.post("http://localhost:8000/api/login/", {
+      const response = await axios.post(`${baseUrl}/api/login/`, {
         customer_id: customerId,
         password: password,
       });
@@ -90,7 +90,7 @@ export default CustomerLogin;
 //     setSuccess("");
 
 //     try {
-//       const response = await axios.post("http://localhost:8000/api/login/", {
+//       
 //         customer_id: customerId,
 //         password: password,
 //       });

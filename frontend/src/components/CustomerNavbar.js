@@ -2,6 +2,7 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import '../styles/CustomerNavbar.css';
+import { baseUrl } from '../services/api-services';
 
 
 const CustomerNavbar = () => {

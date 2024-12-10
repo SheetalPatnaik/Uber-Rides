@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../services/api-services';
 
 const AdminProfile = () => {
     const [profile, setProfile] = useState({
@@ -68,7 +69,7 @@ const AdminProfile = () => {
                 return;
             }
 
-            const response = await fetch('http://localhost:8000/administrator/profile/', {
+            const response = await fetch(`${baseUrl}/administrator/profile/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -103,7 +104,7 @@ const AdminProfile = () => {
                         <img
                             src={profile.profile_image.startsWith('http') 
                                 ? profile.profile_image 
-                                : `http://localhost:8000${profile.profile_image}`}
+                                : `${baseUrl}${profile.profile_image}`}
                             alt="Profile"
                             className="rounded-circle"
                             style={{ 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Container, Row, Col, Navbar } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { baseUrl } from '../services/api-services';
 
 const UserTypeSelector = () => {
   const [userType, setUserType] = useState('');

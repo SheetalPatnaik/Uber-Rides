@@ -3,6 +3,7 @@ import { Container, Form, Table, Button, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 //import './BillingManagement.css';
+import { baseUrl } from '../services/api-services';
 
 const BillingManagement = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const BillingManagement = () => {
     const fetchBills = async (params) => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:8000/api/billing/search/', {
+            const response = await axios.get(`${baseUrl}/api/billing/search/`, {
                 params: params
             });
             console.log(response.data);
@@ -58,7 +59,7 @@ const BillingManagement = () => {
 
     const handleViewDetails = async (rideId) => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/billing/bills/${rideId}/`);
+            const response = await axios.get(`${baseUrl}/api/billing/bills/${rideId}/`);
             // Navigate to bill details page with the data
             navigate(`/admin/bills/${rideId}`, { state: { billData: response.data } });
         } catch (error) {

@@ -4,6 +4,7 @@ import '../styles/HomePage.css';
 import { NavLink } from 'react-router-dom';
 import Footer from '../components/Footer';
 import driverIllustration from '../images/1.jpg';
+import { baseUrl } from '../services/api-services';
 
 
 const HomePage = () => {
@@ -17,7 +18,7 @@ const HomePage = () => {
          <Nav className="me-auto">
            <Nav.Link href="/customer/signup">Ride</Nav.Link>
            <Nav.Link href="/driver/signup">Drive</Nav.Link>
-           <Nav.Link href="/">Business</Nav.Link>
+           <Nav.Link href="/admin/login">Admin</Nav.Link>
            <Nav.Link href="/">Uber Eats</Nav.Link>
            <Nav.Link href="/">About</Nav.Link>
          </Nav>

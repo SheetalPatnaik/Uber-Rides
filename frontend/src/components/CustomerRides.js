@@ -5,6 +5,7 @@ import axios from 'axios';
 import '../styles/CustomerRides.css';
 import WebSocketComponent from './WebSocket';
 import CustomerNavbar from './CustomerNavbar';
+import { baseUrl } from '../services/api-services';
 
 const CustomerRides = () => {
   const [currentRides, setCurrentRides] = useState([]);
@@ -19,7 +20,7 @@ const CustomerRides = () => {
 
   const fetchOngoingRides = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/ongoing-ride/', {
+      const response = await axios.get(`${baseUrl}/api/ongoing-ride/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
@@ -33,7 +34,7 @@ const CustomerRides = () => {
 
   const fetchRides = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/rides/', {
+      const response = await axios.get(`${baseUrl}/api/rides/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }

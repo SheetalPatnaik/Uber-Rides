@@ -18,7 +18,7 @@ ADD requirements.txt /code/
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-ADD ubereats /code/
+ADD . /code/
 
 # RUN chmod +x /code/docker-entrypoint.sh
 

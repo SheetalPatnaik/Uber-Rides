@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Row, Col, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { baseUrl } from '../services/api-services';
 
 
 const ManageCustomers = () => {
@@ -19,7 +20,7 @@ const ManageCustomers = () => {
    const fetchCustomers = async () => {
        try {
            setLoading(true);
-           const response = await axios.get('http://localhost:8000/api/users/', {  // Adjusted URL
+           const response = await axios.get(`${baseUrl}/api/users/`, {  // Adjusted URL
 
            });
            setCustomers(response.data);
@@ -45,7 +46,7 @@ const ManageCustomers = () => {
 
    const handleDisableCustomer = async (customerId) => {
        try {
-           await axios.delete(`http://localhost:8000/api/delete-user/${customerId}/`, {
+           await axios.delete(`${baseUrl}/api/delete-user/${customerId}/`, {
                headers: {
                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
                }
@@ -60,7 +61,7 @@ const ManageCustomers = () => {
 
    const fetchCustomerRides = async (customerId) => {
        try {
-           const response = await axios.get(`http://localhost:8000/api/customers/${customerId}/rides/`, {
+           const response = await axios.get(`${baseUrl}/api/customers/${customerId}/rides/`, {
                headers: {
                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
                }

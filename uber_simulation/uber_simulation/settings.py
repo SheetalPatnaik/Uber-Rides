@@ -138,12 +138,13 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'uber_db', #take from env
-        'USER': 'root', # Replace with your MySQL username from enev
+        'NAME': os.getenv('MYSQL_DATABASE'), #take from env
+        'USER': os.getenv('MYSQL_USER'), # Replace with your MySQL username from enev
         'PASSWORD': os.getenv('MYSQL_PASSWORD'),
-        'HOST': 'localhost', # Replace with your MySQL server host form env
+        'HOST': os.getenv('MYSQL_HOST'), # Replace with your MySQL server host form env
         'PORT': '3306',
         'OPTIONS': {
+            'auth_plugin': 'mysql_native_password',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'"
         }
     }

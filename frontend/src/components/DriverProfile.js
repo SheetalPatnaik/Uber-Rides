@@ -3,6 +3,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import '../styles/DriverProfile.css';
 import DriverNavbar from './DriverNavbar';
+import { baseUrl } from '../services/api-services';
 
 const DriverProfile = () => {
   const [driverData, setDriverData] = useState(null);
@@ -20,14 +21,14 @@ const DriverProfile = () => {
 
   const fetchDriverProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/driver/profile`, {
+      const response = await axios.get(`${baseUrl}/api/driver/profile`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
       });
       setDriverData(response.data);
       if (response.data.profile_photo) {
-        setPreviewImage(response.data.profile_photo);
+        setPreviewImage(baseUrl+response.data.profile_photo);
         setImageKey(Date.now()); // Update the key to force re-render
       }
       setLoading(false);
@@ -53,7 +54,7 @@ const DriverProfile = () => {
   
         try {
           await axios.put(
-            `http://localhost:8000/api/driver/profile/update`,
+            `${baseUrl}/api/driver/profile/update`,
             {
               current_location_lat: latitude,
               current_location_lng: longitude,
@@ -94,7 +95,7 @@ const DriverProfile = () => {
  
  
         const response = await axios.put(
-          `http://localhost:8000/api/driver/profile/update`,
+          `${baseUrl}/api/driver/profile/update`,
           formData,
           {
             headers: {
@@ -135,7 +136,7 @@ const DriverProfile = () => {
 
       // Send the update request without sensitive fields
       await axios.put(
-        `http://localhost:8000/api/driver/profile/update`,
+        `${baseUrl}/api/driver/profile/update`,
         updateData,
         {
           headers: {

@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: uber-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: uber-backend
+  template:
+    metadata:
+      labels:
+        app: uber-backend
+    spec:
+      containers:
+      - name: uber-backend
+        image: leoncorreiasjsu/uber_backend:latest
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: django-media
+          mountPath: /app/media
+        command: ["sh"]
+        args: ["-c", "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"]
+        env:
+        - name: GOOGLE_MAPS_API_KEY
+          value: AIzaSyCzP2SPg1M7AFS6wPgCyYPrFUwRDictd4w
+        - name: MYSQL_DATABASE
+          value: uber_db
+        - name: MYSQL_HOST
+          value: mysql-service
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_PASSWORD
+          value: leoncorreia
+        - name: KAFKA_BROKER
+          value: kafka-service:9092
+        - name: REDIS_HOST
+          value: redis-service
+        - name: KAFKA_TOPIC
+          value: uber
+      - name: uber-backend-consumer
+        image: leoncorreiasjsu/uber_backend:latest
+        ports:
+        - containerPort: 8000
+        command: ["python"]
+        args: ["manage.py", "run_kafka_consumer"]
+        env:
+        - name: GOOGLE_MAPS_API_KEY
+          value: AIzaSyCzP2SPg1M7AFS6wPgCyYPrFUwRDictd4w
+        - name: MYSQL_DATABASE
+          value: uber_db
+        - name: MYSQL_HOST
+          value: mysql-service
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_PASSWORD
+          value: leoncorreia
+        - name: KAFKA_BROKER
+          value: kafka-service:9092
+        - name: REDIS_HOST
+          value: redis-service
+        - name: KAFKA_TOPIC
+          value: uber
+      volumes:
+      - name: django-media
+        persistentVolumeClaim:
+          claimName: django-images-pvc
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: uber-backend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: uber-backend
+  ports:
+  - protocol: TCP
+    port: 9080
+    targetPort: 8000

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { baseUrl } from '../services/api-services';
 
 
 const ManageDrivers = () => {
@@ -17,7 +18,7 @@ const ManageDrivers = () => {
     const fetchDrivers = async () => {
         try {
             setLoading(true);
-            const response = await axios.get('http://localhost:8000/api/driver/drivers/');
+            const response = await axios.get(`${baseUrl}/api/driver/drivers/`);
             setDrivers(response.data);
             setError(null);
         } catch (error) {
@@ -39,7 +40,7 @@ const ManageDrivers = () => {
 
     const handleDisable = async (driverId) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/driver/delete-driver/${driverId}/`, {
+            const response = await fetch(`${baseUrl}/api/driver/delete-driver/${driverId}/`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

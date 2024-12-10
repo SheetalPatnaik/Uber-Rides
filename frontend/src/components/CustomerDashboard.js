@@ -3,6 +3,7 @@ import { Container, Nav, Row, Col } from 'react-bootstrap';
 import { NavLink, useNavigate } from 'react-router-dom';
 import '../styles/CustomerDashboard.css';
 import Footer from './Footer';
+import { baseUrl } from '../services/api-services';
 import CustomerImage from '../images/booking_a_ride.jpeg'; // You can replace this image with a relevant one for customers
 
 const CustomerDashboard = () => {

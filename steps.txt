@@ -1,0 +1,50 @@
+docker build -t uber_backend:latest .
+docker tag uber_backend:latest 730335306233.dkr.ecr.us-east-1.amazonaws.com/uber/uber_backend:latest
+docker push 730335306233.dkr.ecr.us-east-1.amazonaws.com/uber/uber_backend:latest
+
+docker build -t uber_frontend:latest .
+docker tag uber_frontend:latest leoncorreiasjsu/uber_frontend:latest 
+docker push leoncorreiasjsu/uber_frontend:latest
+-docker
+docker run -d -p 8000:8000  backend:latest
+docker run -d -p 3000:3000  frontent:latest
+
+-docker-compose
+docker-compose up -d mongodb
+docker-compose up -d kafka
+docker-compose up -d redis
+docker-compose up -d backend
+docker-compose up -d frontend
+${baseUrl}
+-kubernetes
+minikube start
+run below commands in kubernetes folder
+kubectl apply -f mysql-pvc.yaml
+kubectl apply -f mysql-app.yaml
+kubectl apply -f redis-app.yaml
+kubectl apply -f kafka-app.yaml
+kubectl apply -f backend-app.yaml
+kubectl apply -f frontend-app.yaml
+kubectl apply -f zookeeper-app.yaml
+kubectl apply -f namespace-uber.yaml
+minikube tunnel
+to restart if u create a new docker image
+kubectl rollout restart deployment uber-backend -n uber
+kubectl rollout restart deployment frontend
+
+
+kubectl get pods
+kubectl exec -it kafka-6fc8f449f6-ppz49 -- /bin/sh  #command for message flows
+kubectl logs -f <pod-name>
+also by container name
+kubectl logs -f <pod-name> -c <container-name>
+
+kafka-topics.sh --describe  --bootstrap-server kafka-service:9092
+kafka-topics.sh --describe  --bootstrap-server kafka-service:9092 --topic uber
+kafka-topics.sh --create --bootstrap-server kafka-service:9092 --replication-factor 1 --partitions 3 --topic uber
+
+kafka-console-producer.sh --broker-list kafka-service:9092 --topic orders
+
+kafka-console-producer.sh --broker-list kafka-service:9092 --topic kafka_orders2
+kafka-console-consumer.sh --bootstrap-server kafka-service:9092 --topic orders --from-beginning #command for message flows
+

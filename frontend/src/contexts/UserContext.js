@@ -1,5 +1,6 @@
 // contexts/UserContext.js
 import React, { createContext, useState, useContext } from 'react';
+import { baseUrl } from '../services/api-services';
 
 
 const UserContext = createContext();

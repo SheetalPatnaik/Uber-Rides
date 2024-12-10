@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Table } from 'react-bootstrap';
 import CustomerNavbar from './CustomerNavbar';
+import { baseUrl } from '../services/api-services';
 
 const BillDetails = () => {
   const { rideId } = useParams(); // Get rideId from URL
@@ -12,7 +13,7 @@ const BillDetails = () => {
   useEffect(() => {
     const fetchBillDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/billing/get-bill/${rideId}/`, {
+        const response = await axios.get(`${baseUrl}/api/billing/get-bill/${rideId}/`, {
         });
         setBill(response.data);
       } catch (err) {

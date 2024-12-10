@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import '../styles/RideDetailPage.css';
 import CustomerNavbar from './CustomerNavbar';
+import { baseUrl } from '../services/api-services';
 
 
 const RideDetailPage = () => {
@@ -21,7 +22,7 @@ const RideDetailPage = () => {
 
 
  const fetchRideDetails = () => {
-   axios.get(`http://localhost:8000/api/ride/${rideId}/detail/`, {
+   axios.get(`${baseUrl}/api/ride/${rideId}/detail/`, {
        headers: {
          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
        },
@@ -40,7 +41,7 @@ const RideDetailPage = () => {
 
  const handleSubmitReview = (e) => {
    e.preventDefault();
-   axios.post(`http://localhost:8000/api/add-review/${rideId}/`, newReview, {
+   axios.post(`${baseUrl}/api/add-review/${rideId}/`, newReview, {
      headers: {
        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
      },

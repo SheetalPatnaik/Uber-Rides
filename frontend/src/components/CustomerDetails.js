@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Table } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { baseUrl } from '../services/api-services';
 
 const CustomerDetails = () => {
     const { customerId } = useParams();
@@ -19,12 +20,12 @@ const CustomerDetails = () => {
         try {
             setLoading(true);
             const [customerResponse, ridesResponse] = await Promise.all([
-                axios.get(`http://localhost:8000/api/customers/${customerId}/`, {
+                axios.get(`${baseUrl}/api/customers/${customerId}/`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
                     }
                 }),
-                axios.get(`http://localhost:8000/api/customers/${customerId}/rides/`, {
+                axios.get(`${baseUrl}/api/customers/${customerId}/rides/`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
                     }

@@ -20,10 +20,7 @@
 //     const fetchStatistics = async () => {
 //         try {
 //             const [revenueResponse, areaResponse, driverResponse, customerResponse] = await Promise.all([
-//                 axios.get('http://localhost:8000/api/visualizations/revenue/'),
-//                 axios.get('http://localhost:8000/api/visualizations/area-rides/'),
-//                 axios.get('http://localhost:8000/api/visualizations/driver-rides/'),
-//                 axios.get('http://localhost:8000/api/visualizations/customer-rides/')
+//                 
 //             ]);
 
 //             setRevenueData(revenueResponse.data);
@@ -127,6 +124,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import {
     LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
+import { baseUrl } from '../services/api-services';
 
 const Statistics = () => {
     const [revenueData, setRevenueData] = useState([]);

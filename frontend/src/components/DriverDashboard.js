@@ -6,6 +6,7 @@ import '../styles/DriverDashboard.css';
 import Footer from './Footer';
 import DriverImage from '../images/5.jpg'
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../services/api-services';
 
 const DriverDashboard = () => {
   const navigate = useNavigate();

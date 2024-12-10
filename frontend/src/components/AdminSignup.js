@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Alert, Row, Col } from 'react-bootstrap';
+import { baseUrl } from '../services/api-services';
 
 const AdminSignup = () => {
     const [formData, setFormData] = useState({
@@ -111,7 +112,7 @@ const AdminSignup = () => {
                 }
             });
 
-            const response = await fetch('http://localhost:8000/administrator/register/', {
+            const response = await fetch(`${baseUrl}/administrator/register/`, {
                 method: 'POST',
                 body: formDataToSend
             });

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import axios from 'axios';
+import { baseUrl } from '../services/api-services';
 
 const DriverDetails = () => {
     const { driverId } = useParams();
@@ -12,7 +13,7 @@ const DriverDetails = () => {
     useEffect(() => {
         const fetchDriverDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/api/driver/drivers/${driverId}/`);
+                const response = await axios.get(`${baseUrl}/api/driver/drivers/${driverId}/`);
                 setDriver(response.data);
             } catch (error) {
                 setError('Failed to fetch driver details');

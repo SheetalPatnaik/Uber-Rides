@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GoogleMap, LoadScript, Autocomplete } from '@react-google-maps/api';
 import { Form, Button, Container, Row, Col, Card, Alert } from 'react-bootstrap';
 import axios from 'axios';
-
+import { baseUrl } from '../services/api-services';
 import { useNavigate } from 'react-router-dom'; 
 
 const libraries = ['places'];
@@ -103,7 +103,7 @@ const CustomerSignupForm = () => {
     setErrorMessages([]); // Reset errors
 
     try {
-      const response = await axios.post('http://localhost:8000/api/register-customer/', formData);
+      const response = await axios.post(`${baseUrl}/api/register-customer/`, formData);
 
       if (response.data.message) {
         setSuccessMessage('Customer registered successfully!');

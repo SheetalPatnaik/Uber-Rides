@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { websocketBaseUrl } from "../services/api-services";
+import { baseUrl } from '../services/api-services';
 
 const WebSocketComponent = ({ callback, type }) => {
   const [connected, setConnected] = useState(false);
@@ -8,10 +10,10 @@ const WebSocketComponent = ({ callback, type }) => {
     var ws = null;
     if (type == 'driver') {
       let access_token = localStorage.getItem('accessToken');
-      ws = new WebSocket(`ws://127.0.0.1:8000/ws/driver/${access_token}/`);
+      ws = new WebSocket(`${websocketBaseUrl}/ws/driver/${access_token}/`);
     } else {
       let access_token = localStorage.getItem('access_token');
-      ws = new WebSocket(`ws://127.0.0.1:8000/ws/customer/${access_token}/`);
+      ws = new WebSocket(`${websocketBaseUrl}/ws/customer/${access_token}/`);
     }
 
     if (ws) {

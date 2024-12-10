@@ -1,10 +1,11 @@
 version: '3.8'
 
 services:
-  web:
+  uber_backend:
     build:
       context: .
-    container_name: django_web
+    container_name: uber_backend
+    image: uber_backend:latest
     restart: always
     command: >
       sh -c "python manage.py migrate &&
@@ -18,22 +19,24 @@ services:
     depends_on:
       - db
     environment:
-      DJANGO_SETTINGS_MODULE: uber_simulation.settings
-      DATABASE_HOST: db
-      DATABASE_PORT: 3306
-      DATABASE_NAME: uber_simulation_db
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
+      GOOGLE_MAPS_API_KEY: AIzaSyCzP2SPg1M7AFS6wPgCyYPrFUwRDictd4w
+      MYSQL_PASSWORD: leoncorreia
+      MYSQL_USER: root
+      MYSQL_DATABASE: uber_db
+      MYSQL_HOST: localhost
+      KAFKA_BROKER: localhost:9092
+      KAFKA_TOPIC: uber
+      REDIS_HOST: 127.0.0.1
 
   db:
     image: mysql:8.0
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: uber_simulation_db
+      MYSQL_ROOT_PASSWORD: leoncorreia
+      MYSQL_DATABASE: uber_db
       MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_PASSWORD: leoncorreia
     volumes:
       - mysql_data:/var/lib/mysql
     ports:

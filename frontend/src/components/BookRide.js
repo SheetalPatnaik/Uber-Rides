@@ -3,6 +3,7 @@ import { GoogleMap, LoadScript, Autocomplete, Marker } from '@react-google-maps/
 import axios from 'axios';
 import '../styles/BookRide.css';
 import CustomerNavbar from './CustomerNavbar';
+import { baseUrl } from '../services/api-services';
 
 const BookRide = () => {
   const [pickupLocation, setPickupLocation] = useState(null);
@@ -72,7 +73,7 @@ const BookRide = () => {
     };
     console.log("Booking data:", bookingData);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/create-ride/', bookingData, {
+      const response = await axios.post(`${baseUrl}/api/create-ride/`, bookingData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'application/json',

@@ -5,6 +5,7 @@ import axios from 'axios';
 import '../styles/DriverRides.css';
 import WebSocketComponent from './WebSocket';
 import DriverNavbar from './DriverNavbar';
+import { baseUrl } from '../services/api-services';
 
 const DriverRides = () => {
   const [currentRides, setCurrentRides] = useState([]);
@@ -20,7 +21,7 @@ const DriverRides = () => {
 
   const fetchRideRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/driver/ride-requests/', {
+      const response = await axios.get(`${baseUrl}/api/driver/ride-requests/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -34,7 +35,7 @@ const DriverRides = () => {
 
   const fetchOngoingRides = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/driver/ongoing-ride/', {
+      const response = await axios.get(`${baseUrl}/api/driver/ongoing-ride/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -48,7 +49,7 @@ const DriverRides = () => {
 
   const fetchRides = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/driver/rides/', {
+      const response = await axios.get(`${baseUrl}/api/driver/rides/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -67,9 +68,9 @@ const DriverRides = () => {
   };
 
   const handleRideAction = async (rideId, action) => {
-    var url = action === 'accept'?`http://localhost:8000/api/driver/accept-ride/${rideId}`:(
-      action=='pick'?`http://localhost:8000/api/driver/pick-rider/${rideId}`:(
-        action=='complete'?`http://localhost:8000/api/driver/complete-ride/${rideId}`:''
+    var url = action === 'accept'?`${baseUrl}/api/driver/accept-ride/${rideId}`:(
+      action=='pick'?`${baseUrl}/api/driver/pick-rider/${rideId}`:(
+        action=='complete'?`${baseUrl}/api/driver/complete-ride/${rideId}`:''
       )
     );
     if(url) {

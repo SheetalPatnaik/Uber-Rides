@@ -9,6 +9,7 @@ import InstagramIcon from '../images/instagram.png';
 import TwitterIcon from '../images/x.png';
 import YoutubeIcon from '../images/youtube.png';
 import LinkedinIcon from '../images/linkedin.png';
+import { baseUrl } from '../services/api-services';
 
 const Footer = () => {
   return (

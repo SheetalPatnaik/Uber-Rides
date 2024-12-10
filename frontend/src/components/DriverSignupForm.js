@@ -72,7 +72,7 @@
 //   //   });
 
 //   //   try {
-//   //     const response = await axios.post('http://localhost:8000/api/driver/register/', data, {
+//   //     
 //   //       headers: { 'Content-Type': 'multipart/form-data' },
 //   //     });
 //   //     setMessage('Driver registered successfully!');
@@ -88,7 +88,7 @@
 //     });
 
 //     try {
-//       const response = await axios.post('http://localhost:8000/api/driver/register/', data, {
+//     
 //         headers: { 
 //           'Content-Type': 'multipart/form-data',
 //         },
@@ -291,6 +291,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/DriverSignupForm.css';
 import { useNavigate } from 'react-router-dom';
+import { baseUrl } from '../services/api-services';
 
 
 const VEHICLE_TYPES = [
@@ -365,7 +366,7 @@ const DriverSignupForm = () => {
      if (value !== null) data.append(key, value);
    });
    try {
-     const response = await axios.post('http://localhost:8000/api/driver/register/', data, {
+     const response = await axios.post(`${baseUrl}/api/driver/register/`, data, {
        headers: {
          'Content-Type': 'multipart/form-data',
        },

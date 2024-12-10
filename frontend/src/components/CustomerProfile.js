@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import { baseUrl } from '../services/api-services';
 import CustomerNavbar from './CustomerNavbar';
 //import '../styles/CustomerProfile.css';
 
@@ -21,14 +22,14 @@ const CustomerProfile = () => {
 
   const fetchCustomerProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/profile`, {
+      const response = await axios.get(`${baseUrl}/api/profile`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         }
       });
       setCustomerData(response.data);
       if (response.data.profile_photo) {
-        setPreviewImage('http://localhost:8000'+response.data.profile_photo);
+        setPreviewImage(`${baseUrl}`+response.data.profile_photo);
       }
       setLoading(false);
     } catch (err) {
@@ -46,7 +47,7 @@ const CustomerProfile = () => {
         // formData.append('profile_photo', file);
 
         // const response = await axios.post(
-        //   `http://localhost:8000/api/profile/update`,
+        //   
         //   formData,
         //   {
         //     headers: {
@@ -90,7 +91,7 @@ const CustomerProfile = () => {
       }
 
       await axios.put(
-        `http://localhost:8000/api/profile/update`,
+        `${baseUrl}/api/profile/update`,
         formData,
         {
           headers: {
