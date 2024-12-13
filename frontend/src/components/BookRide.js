@@ -17,7 +17,7 @@ const BookRide = () => {
   const pickupRef = useRef(null);
   const dropoffRef = useRef(null);
 
-  const googleMapsApiKey = 'AIzaSyAiUD92rmV0NFADP4KAGdyu5Mg3-rg-6BE'; // Replace with your Google Maps API Key
+  const googleMapsApiKey = ''; // Replace with your Google Maps API Key
 
   const handlePlaceSelect = (address, isPickup) => {
     const geocoder = new window.google.maps.Geocoder();
